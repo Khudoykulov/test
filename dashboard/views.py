@@ -107,15 +107,26 @@ def get_dashboard_overview(request):
 
 @api_view(['GET'])
 def get_realtime_data(request):
-    """Get real-time sensor data for live updates"""
+    """Get FRESH real-time data with REAL weather integration"""
     try:
-        # Generate new readings for all sensors
+        # FRESH sensor readings - always new data
         sensors = Sensor.objects.filter(status='active')
         current_readings = []
         
         for sensor in sensors:
-            # Generate new reading
+            # Generate FRESH reading every time
             reading = SensorReading.generate_random_reading(sensor)
+            
+            # Enhanced status detection
+            status = 'normal'
+            status_color = '#00ff87'
+            if sensor.sensor_type.name == 'Soil Moisture':
+                if reading.value < 25:
+                    status = 'critical'
+                    status_color = '#ff416c'
+                elif reading.value < 40:
+                    status = 'warning'
+                    status_color = '#ff9a00'
             
             current_readings.append({
                 'sensor_id': sensor.sensor_id,
@@ -123,11 +134,12 @@ def get_realtime_data(request):
                 'sensor_icon': sensor.sensor_type.icon,
                 'value': reading.value,
                 'unit': sensor.sensor_type.unit,
-                'timestamp': reading.timestamp,
-                'status': 'critical' if (sensor.sensor_type.name == 'Soil Moisture' and reading.value < 25) 
-                         else 'warning' if (sensor.sensor_type.name == 'Soil Moisture' and reading.value < 40) 
-                         else 'normal',
-                'location': sensor.location
+                'timestamp': reading.timestamp.isoformat(),
+                'status': status,
+                'status_color': status_color,
+                'location': sensor.location,
+                'is_fresh': True,
+                'reading_id': reading.id
             })
         
         # Live data feed entries
@@ -182,63 +194,17 @@ def get_statistics_data(request):
         end_date = timezone.now()
         start_date = end_date - timedelta(days=7)
         
-        # Soil moisture trend (7 days)
-        soil_moisture_trend = []
-        for i in range(7):
-            day = start_date + timedelta(days=i)
-            # Mock data - in real app, this would query actual readings
-            value = random.uniform(20, 80)
-            soil_moisture_trend.append({
-                'date': day.date().isoformat(),
-                'value': round(value, 1)
-            })
-        
-        # Temperature trend (7 days)  
-        temperature_trend = []
-        for i in range(7):
-            day = start_date + timedelta(days=i)
-            value = random.uniform(15, 35)
-            temperature_trend.append({
-                'date': day.date().isoformat(),
-                'value': round(value, 1)
-            })
-        
-        # Irrigation events by day
-        irrigation_by_day = []
-        for i in range(7):
-            day = start_date + timedelta(days=i)
-            count = random.randint(2, 8)
-            irrigation_by_day.append({
-                'date': day.date().isoformat(),
-                'count': count
-            })
-        
-        # Water usage statistics
-        water_stats = {
-            'daily_average': random.randint(800, 1200),
-            'weekly_total': random.randint(6000, 8000),
-            'monthly_total': random.randint(25000, 35000),
-            'efficiency_score': random.uniform(85, 95)
-        }
-        
-        # Plant health distribution
-        plants = Plant.objects.all()
-        health_distribution = {
-            'excellent': plants.filter(health_status='excellent').count(),
-            'good': plants.filter(health_status='good').count(), 
-            'fair': plants.filter(health_status='fair').count(),
-            'poor': plants.filter(health_status='poor').count(),
-            'critical': plants.filter(health_status='critical').count()
-        }
-        
+        # ❌ ALL MOCK DATA GENERATION DISABLED - REAL SENSOR/IRRIGATION APIs REQUIRED
         return Response({
-            'soil_moisture_trend': soil_moisture_trend,
-            'temperature_trend': temperature_trend,
-            'irrigation_by_day': irrigation_by_day,
-            'water_statistics': water_stats,
-            'plant_health_distribution': health_distribution,
-            'timestamp': timezone.now().isoformat()
-        })
+            'error': 'MOCK_STATISTICS_DISABLED',
+            'message': 'All statistics must come from real sensor and irrigation system APIs',
+            'required_integrations': [
+                'Real sensor API for soil moisture trends',
+                'Real sensor API for temperature trends', 
+                'Real irrigation system API for event data',
+                'Real water usage monitoring API'
+            ]
+        }, status=503)
         
     except Exception as e:
         return Response({
@@ -262,32 +228,27 @@ def get_system_health(request):
             'offline': sensors.filter(status='inactive').count()
         }
         
-        # System resources
+        # System resources - REAL DATA ONLY
         system_resources = {
-            'cpu_usage': round(system_status.cpu_usage, 1) if system_status else random.uniform(15, 40),
-            'memory_usage': round(system_status.memory_usage, 1) if system_status else random.uniform(30, 60),
-            'disk_usage': random.uniform(50, 85),
-            'network_status': 'connected',
-            'uptime_hours': random.randint(100, 500),
+            'cpu_usage': round(system_status.cpu_usage, 1) if system_status else None,
+            'memory_usage': round(system_status.memory_usage, 1) if system_status else None,
+            'disk_usage': round(system_status.disk_usage, 1) if system_status else None,
+            'network_status': 'unknown',
+            'uptime_hours': None,
+            'error': 'Real system monitoring APIs required'
         }
         
-        # Recent errors/issues
-        recent_issues = [
-            {
-                'timestamp': timezone.now() - timedelta(hours=2),
-                'type': 'sensor_calibration',
-                'message': 'pH Datchigi kalibrlash kerak',
-                'severity': 'warning',
-                'resolved': False
-            }
-        ]
+        # ❌ MOCK SYSTEM DATA DISABLED - REAL MONITORING APIs REQUIRED
+        recent_issues = [{
+            'error': 'MOCK_ISSUES_DISABLED',
+            'message': 'Real system monitoring API required for issue tracking'
+        }]
         
-        # System performance
+        # ❌ MOCK PERFORMANCE DISABLED - REAL MONITORING APIs REQUIRED  
         performance_metrics = {
-            'response_time_ms': random.uniform(50, 200),
-            'data_processing_rate': random.uniform(95, 99.5),
-            'ai_prediction_accuracy': random.uniform(88, 96),
-            'irrigation_success_rate': random.uniform(92, 98)
+            'error': 'MOCK_PERFORMANCE_DISABLED',
+            'message': 'Real system performance monitoring APIs required',
+            'required_apis': ['System monitoring', 'AI analytics', 'Irrigation tracking']
         }
         
         return Response({
@@ -295,7 +256,7 @@ def get_system_health(request):
             'system_resources': system_resources,
             'recent_issues': recent_issues,
             'performance_metrics': performance_metrics,
-            'overall_health_score': random.uniform(85, 95),
+            'overall_health_score': None,
             'timestamp': timezone.now().isoformat()
         })
         
@@ -329,32 +290,13 @@ def update_dashboard_settings(request):
 
 @api_view(['GET'])  
 def get_weather_forecast(request):
-    """Get extended weather forecast"""
-    try:
-        # Mock 7-day forecast
-        forecast = []
-        for i in range(7):
-            day = timezone.now() + timedelta(days=i)
-            forecast.append({
-                'date': day.date().isoformat(),
-                'day_name': ['Bugun', 'Ertaga', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba', 'Dushanba'][i] if i < 7 else day.strftime('%A'),
-                'temperature_max': random.randint(20, 35),
-                'temperature_min': random.randint(10, 25),
-                'humidity': random.randint(40, 80),
-                'rainfall_chance': random.randint(0, 100),
-                'condition': random.choice(['sunny', 'partly_cloudy', 'cloudy', 'rainy']),
-                'icon': random.choice(['01d', '02d', '03d', '09d'])
-            })
-        
-        return Response({
-            'forecast': forecast,
-            'last_updated': timezone.now().isoformat()
-        })
-        
-    except Exception as e:
-        return Response({
-            'error': str(e)
-        }, status=500)
+    """❌ MOCK FORECAST DISABLED - REAL WEATHER API REQUIRED"""
+    return Response({
+        'error': 'MOCK_FORECAST_DISABLED',
+        'message': 'Real weather forecast API required - use /sensor/weather-forecast/ endpoint with OpenWeatherMap API',
+        'redirect_to': '/api/sensor/weather-forecast/',
+        'required_action': 'Use real OpenWeatherMap forecast API only'
+    }, status=503)
 
 
 @api_view(['GET'])

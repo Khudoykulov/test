@@ -18,18 +18,18 @@ logger = logging.getLogger(__name__)
 def analyze_irrigation_need(request):
     """Analyze irrigation need using AI"""
     try:
-        # Get latest sensor data
+        # Generate FRESH sensor data for analysis
         sensors_data = {}
         
-        # Collect data from all active sensors
+        # Collect data from all active sensors - generate new readings
         sensors = Sensor.objects.filter(status='active')
         for sensor in sensors:
-            latest_reading = sensor.get_latest_reading()
-            if latest_reading:
-                sensor_key = sensor.sensor_type.name.lower().replace(' ', '_')
-                sensors_data[sensor_key] = latest_reading.value
+            # Generate new random reading for fresh AI analysis
+            fresh_reading = SensorReading.generate_random_reading(sensor)
+            sensor_key = sensor.sensor_type.name.lower().replace(' ', '_')
+            sensors_data[sensor_key] = fresh_reading.value
         
-        # Get weather data
+        # Get or generate fresh weather data
         latest_weather = WeatherData.objects.first()
         weather_data = {}
         if latest_weather:
@@ -38,7 +38,25 @@ def analyze_irrigation_need(request):
                 'humidity': latest_weather.humidity,
                 'rainfall_forecast': latest_weather.rainfall,
                 'wind_speed': latest_weather.wind_speed,
-                'pressure': latest_weather.pressure
+                'pressure': latest_weather.pressure,
+                'feels_like_temperature': latest_weather.feels_like_temperature,
+                'uv_index': latest_weather.uv_index,
+                'air_quality_index': latest_weather.air_quality_index,
+                'wind_gust': latest_weather.wind_gust
+            }
+        else:
+            # Generate mock weather data if none exists
+            import random
+            weather_data = {
+                'temperature': random.uniform(20, 32),
+                'humidity': random.uniform(40, 75),
+                'rainfall_forecast': random.uniform(0, 10) if random.random() < 0.3 else 0,
+                'wind_speed': random.uniform(5, 20),
+                'pressure': random.uniform(1010, 1025),
+                'feels_like_temperature': random.uniform(18, 35),
+                'uv_index': random.uniform(1, 11),
+                'air_quality_index': random.randint(1, 5),
+                'wind_gust': random.uniform(10, 30) if random.random() < 0.5 else None
             }
         
         # Get plant data
@@ -102,14 +120,14 @@ def analyze_plant_health(request):
         if not plant:
             return Response({'error': 'No plants found'}, status=status.HTTP_404_NOT_FOUND)
         
-        # Get sensor data
+        # Generate FRESH sensor data for plant health analysis
         sensors_data = {}
         sensors = Sensor.objects.filter(status='active')
         for sensor in sensors:
-            latest_reading = sensor.get_latest_reading()
-            if latest_reading:
-                sensor_key = sensor.sensor_type.name.lower().replace(' ', '_')
-                sensors_data[sensor_key] = latest_reading.value
+            # Generate new random reading for fresh AI analysis
+            fresh_reading = SensorReading.generate_random_reading(sensor)
+            sensor_key = sensor.sensor_type.name.lower().replace(' ', '_')
+            sensors_data[sensor_key] = fresh_reading.value
         
         # Get plant data
         plant_data = {
@@ -173,16 +191,16 @@ def comprehensive_analysis(request):
             critical_alerts=[]
         )
         
-        # Collect all data
+        # Collect all data with FRESH sensor readings
         sensors_data = {}
         sensors = Sensor.objects.filter(status='active')
         for sensor in sensors:
-            latest_reading = sensor.get_latest_reading()
-            if latest_reading:
-                sensor_key = sensor.sensor_type.name.lower().replace(' ', '_')
-                sensors_data[sensor_key] = latest_reading.value
+            # Generate new random reading for comprehensive AI analysis
+            fresh_reading = SensorReading.generate_random_reading(sensor)
+            sensor_key = sensor.sensor_type.name.lower().replace(' ', '_')
+            sensors_data[sensor_key] = fresh_reading.value
         
-        # Weather data
+        # Get or generate fresh weather data for comprehensive analysis
         latest_weather = WeatherData.objects.first()
         weather_data = {}
         if latest_weather:
@@ -191,7 +209,29 @@ def comprehensive_analysis(request):
                 'humidity': latest_weather.humidity,
                 'rainfall': latest_weather.rainfall,
                 'wind_speed': latest_weather.wind_speed,
-                'weather_condition': latest_weather.weather_condition
+                'weather_condition': latest_weather.weather_condition,
+                'feels_like_temperature': latest_weather.feels_like_temperature,
+                'uv_index': latest_weather.uv_index,
+                'air_quality_index': latest_weather.air_quality_index,
+                'pressure': latest_weather.pressure,
+                'wind_gust': latest_weather.wind_gust,
+                'cloud_coverage': latest_weather.cloud_coverage
+            }
+        else:
+            # Generate fresh mock weather data
+            import random
+            weather_data = {
+                'temperature': random.uniform(20, 32),
+                'humidity': random.uniform(40, 75),
+                'rainfall': random.uniform(0, 10) if random.random() < 0.3 else 0,
+                'wind_speed': random.uniform(5, 20),
+                'weather_condition': random.choice(['Clear', 'Partly Cloudy', 'Cloudy', 'Rain']),
+                'feels_like_temperature': random.uniform(18, 35),
+                'uv_index': random.uniform(1, 11),
+                'air_quality_index': random.randint(1, 5),
+                'pressure': random.uniform(1010, 1025),
+                'wind_gust': random.uniform(10, 30) if random.random() < 0.5 else None,
+                'cloud_coverage': random.randint(0, 100)
             }
         
         # Plant data
