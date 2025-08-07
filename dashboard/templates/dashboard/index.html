@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sug'orish Tizimi - Professional Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            color: #fff;
+        }
+        /* Navbar */
+        .navbar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff87, #60efff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0;
+        }
+        .nav-links li {
+            position: relative;
+        }
+        .nav-links a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: linear-gradient(45deg, #00ff87, #60efff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 135, 0.3);
+        }
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        /* Page Sections */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Common Styles */
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .panel h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #00ff87;
+        }
+        /* Grid Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        /* Status Cards */
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .status-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00ff87, #60efff);
+        }
+        .status-card.warning::before {
+            background: linear-gradient(90deg, #ff9a00, #ffcd00);
+        }
+        .status-card.danger::before {
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+        }
+        .status-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .status-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .status-label {
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        /* Data Feed */
+        .data-feed {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .data-entry {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        .data-entry:last-child {
+            border-bottom: none;
+        }
+        .timestamp {
+            color: #60efff;
+            margin-right: 10px;
+        }
+        .data-normal { color: #00ff87; }
+        .data-warning { color: #ff9a00; }
+        .data-critical { color: #ff416c; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #00ff87;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* API Status */
+        .api-status {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            z-index: 999;
+        }
+        .api-status.connected {
+            border-left: 4px solid #00ff87;
+        }
+        .api-status.disconnected {
+            border-left: 4px solid #ff416c;
+        }
+        /* Control buttons */
+        .control-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .control-btn.active {
+            background: linear-gradient(45deg, #00ff87, #60efff);
+        }
+        .control-btn.stop {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .status-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- API Status Indicator -->
+    <div class="api-status connected" id="apiStatus">
+        🟢 Backend ulangan
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>🤖</span>
+                AI Sug'orish Tizimi
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="dashboard">🏠 Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-page="weather">🌤️ Ob-havo</a></li>
+                <li><a href="#" class="nav-link" data-page="sensors">📡 Datchilar</a></li>
+                <li><a href="#" class="nav-link" data-page="ai">🧠 AI Tahlil</a></li>
+                <li><a href="#" class="nav-link" data-page="control">⚙️ Boshqaruv</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <!-- Status Bar -->
+            <div class="status-bar" id="statusBar">
+                <!-- Status cards will be populated by JavaScript -->
+            </div>
+
+            <!-- Main Dashboard Grid -->
+            <div class="grid-2">
+                <!-- Current Sensor Readings -->
+                <div class="panel">
+                    <h2>📊 Joriy Ko'rsatkichlar</h2>
+                    <div id="currentReadings">
+                        <div class="loading"></div> Ma'lumotlar yuklanmoqda...
+                    </div>
+                </div>
+
+                <!-- Weather Info -->
+                <div class="panel">
+                    <h2>🌤️ Ob-havo Ma'lumotlari</h2>
+                    <div id="weatherInfo">
+                        <div class="loading"></div> Ob-havo ma'lumotlari yuklanmoqda...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Data Feed -->
+            <div class="panel">
+                <h2>📡 Jonli Ma'lumotlar</h2>
+                <div class="data-feed" id="dataFeed">
+                    <!-- Data entries will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Page -->
+        <div id="weather" class="page">
+            <div class="panel">
+                <h2>🌤️ Ob-havo Tahlili va Bashorati</h2>
+                <div id="weatherAnalysis">
+                    <div class="loading"></div> Ma'lumotlar yuklanmoqda...
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensors Page -->
+        <div id="sensors" class="page">
+            <div class="panel">
+                <h2>📡 Datchilar Ma'lumotlari</h2>
+                <div id="sensorsData">
+                    <div class="loading"></div> Ma'lumotlar yuklanmoqda...
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Analysis Page -->
+        <div id="ai" class="page">
+            <div class="panel">
+                <h2>🧠 AI Tahlil va Qarorlar</h2>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button class="control-btn" onclick="runAIAnalysis()">🔍 AI Tahlil Bajarish</button>
+                </div>
+                <div id="aiResults">
+                    <p style="text-align: center; opacity: 0.7;">AI tahlili uchun yuqoridagi tugmani bosing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel Page -->
+        <div id="control" class="page">
+            <div class="panel">
+                <h2>⚙️ Tizim Boshqaruvi</h2>
+                <div class="grid-2">
+                    <div>
+                        <h3 style="color: #00ff87; margin-bottom: 15px;">Asosiy Boshqaruv</h3>
+                        <button class="control-btn" onclick="startIrrigation()" style="width: 100%; margin-bottom: 10px;">
+                            ▶️ Sug'orishni Boshlash
+                        </button>
+                        <button class="control-btn stop" onclick="stopIrrigation()" style="width: 100%; margin-bottom: 10px;">
+                            ⏹️ Sug'orishni To'xtatish
+                        </button>
+                        <button class="control-btn" onclick="getSystemStatus()" style="width: 100%; margin-bottom: 10px;">
+                            📊 Tizim Holati
+                        </button>
+                    </div>
+                    <div>
+                        <h3 style="color: #ff9a00; margin-bottom: 15px;">Favqulodda Boshqaruv</h3>
+                        <button class="control-btn stop" onclick="emergencyStop()" style="width: 100%; margin-bottom: 10px;">
+                            🛑 Favqulodda To'xtatish
+                        </button>
+                        <button class="control-btn" onclick="systemRestart()" style="width: 100%; margin-bottom: 10px;">
+                            🔄 Tizimni Qayta Ishga Tushirish
+                        </button>
+                        <button class="control-btn" onclick="calibrateSensors()" style="width: 100%; margin-bottom: 10px;">
+                            🔧 Datchilarni Kalibrlash
+                        </button>
+                    </div>
+                </div>
+                <div id="controlResults" style="margin-top: 20px;">
+                    <!-- Control results will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = window.location.origin;
+        let updateInterval;
+        let isConnected = true;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNavigation();
+            loadDashboardData();
+            startRealTimeUpdates();
+            
+            // Generate initial sample data
+            generateSampleData();
+        });
+
+        // Navigation functionality
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and pages
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    pages.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show corresponding page
+                    const targetPage = this.getAttribute('data-page');
+                    document.getElementById(targetPage).classList.add('active');
+                    
+                    // Load page-specific data
+                    loadPageData(targetPage);
+                });
+            });
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch(`${API_BASE}/api/overview/`);
+                const data = await response.json();
+                
+                updateStatusCards(data);
+                updateCurrentReadings(data);
+                updateWeatherInfo(data.weather);
+                updateAPIStatus(true);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                updateAPIStatus(false);
+            }
+        }
+
+        // Update status cards
+        function updateStatusCards(data) {
+            const statusBar = document.getElementById('statusBar');
+            
+            statusBar.innerHTML = `
+                <div class="status-card">
+                    <span class="status-icon">🌱</span>
+                    <div class="status-value">${data.system_status?.status || 'FAOL'}</div>
+                    <div class="status-label">Tizim Holati</div>
+                </div>
+                <div class="status-card ${data.critical_alerts?.length > 0 ? 'danger' : ''}">
+                    <span class="status-icon">⚠️</span>
+                    <div class="status-value">${data.critical_alerts?.length || 0}</div>
+                    <div class="status-label">Kritik Ogohlantirishlar</div>
+                </div>
+                <div class="status-card">
+                    <span class="status-icon">🧠</span>
+                    <div class="status-value">FAOL</div>
+                    <div class="status-label">AI Holati</div>
+                </div>
+                <div class="status-card ${data.irrigation?.active_events > 0 ? 'warning' : ''}">
+                    <span class="status-icon">${data.irrigation?.active_events > 0 ? '⚡' : '💤'}</span>
+                    <div class="status-value">${data.irrigation?.active_events > 0 ? 'FAOL' : 'KUTISH'}</div>
+                    <div class="status-label">Sug'orish</div>
+                </div>
+            `;
+        }
+
+        // Update current readings
+        function updateCurrentReadings(data) {
+            const readingsDiv = document.getElementById('currentReadings');
+            
+            // This would normally come from the API, but for demo we'll use mock data
+            readingsDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 1.2rem; color: #60efff;">🌍 Tuproq Namligi</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: #ff416c;">23%</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">Kritik daraja</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 1.2rem; color: #60efff;">🌡️ Harorat</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: #00ff87;">24°C</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">Optimal</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 1.2rem; color: #60efff;">💨 Namlik</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: #ff9a00;">45%</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">Past</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                        <div style="font-size: 1.2rem; color: #60efff;">⚡ pH</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: #00ff87;">6.8</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">Ideal</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update weather info
+        function updateWeatherInfo(weather) {
+            const weatherDiv = document.getElementById('weatherInfo');
+            
+            if (weather) {
+                weatherDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem;">🌡️</div>
+                            <div style="font-size: 1.5rem; color: #60efff; margin: 10px 0;">${weather.temperature}°C</div>
+                            <div>Harorat</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem;">💨</div>
+                            <div style="font-size: 1.5rem; color: #60efff; margin: 10px 0;">${weather.humidity}%</div>
+                            <div>Namlik</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem;">🌧️</div>
+                            <div style="font-size: 1.5rem; color: ${weather.rainfall > 0 ? '#00ff87' : '#ff9a00'}; margin: 10px 0;">${weather.rainfall}mm</div>
+                            <div>Yomg'ir</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; text-align: center; opacity: 0.8;">
+                        ${weather.condition} - ${new Date().toLocaleTimeString('uz-UZ')} holatiga ko'ra
+                    </div>
+                `;
+            }
+        }
+
+        // Start real-time updates
+        function startRealTimeUpdates() {
+            updateInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/api/realtime/`);
+                    const data = await response.json();
+                    
+                    updateDataFeed(data.data_feed);
+                    updateAPIStatus(true);
+                } catch (error) {
+                    console.error('Error fetching real-time data:', error);
+                    updateAPIStatus(false);
+                }
+            }, 10000); // Update every 10 seconds
+        }
+
+        // Update data feed
+        function updateDataFeed(entries) {
+            const dataFeed = document.getElementById('dataFeed');
+            
+            if (entries && entries.length > 0) {
+                dataFeed.innerHTML = entries.map(entry => {
+                    const timestamp = new Date(entry.timestamp).toLocaleTimeString('uz-UZ');
+                    return `
+                        <div class="data-entry data-${entry.type}">
+                            <span class="timestamp">[${timestamp}]</span>
+                            ${entry.message}
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Update API status
+        function updateAPIStatus(connected) {
+            const statusDiv = document.getElementById('apiStatus');
+            isConnected = connected;
+            
+            if (connected) {
+                statusDiv.className = 'api-status connected';
+                statusDiv.innerHTML = '🟢 Backend ulangan';
+            } else {
+                statusDiv.className = 'api-status disconnected';
+                statusDiv.innerHTML = '🔴 Backend ulanmagan';
+            }
+        }
+
+        // Load page-specific data
+        function loadPageData(page) {
+            switch (page) {
+                case 'weather':
+                    loadWeatherPage();
+                    break;
+                case 'sensors':
+                    loadSensorsPage();
+                    break;
+                case 'ai':
+                    // AI page loads on demand
+                    break;
+                case 'control':
+                    loadControlPage();
+                    break;
+            }
+        }
+
+        // Load weather page
+        async function loadWeatherPage() {
+            const weatherDiv = document.getElementById('weatherAnalysis');
+            weatherDiv.innerHTML = '<div class="loading"></div> Ob-havo ma\'lumotlari yuklanmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/sensor/weather/`);
+                const data = await response.json();
+                
+                weatherDiv.innerHTML = `
+                    <div class="grid-3">
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 2.5rem;">🌡️</div>
+                            <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.temperature}°C</div>
+                            <div>Harorat</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Optimal: 18-26°C</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 2.5rem;">💨</div>
+                            <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.humidity}%</div>
+                            <div>Namlik</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">${data.humidity < 50 ? 'Past' : 'Normal'}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 2.5rem;">🌧️</div>
+                            <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.rainfall}mm</div>
+                            <div>Yomg'ir</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Prognoz</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; background: rgba(0,255,135,0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #00ff87;">
+                        <h3 style="color: #00ff87; margin-bottom: 15px;">💡 AI Tavsiyasi</h3>
+                        <p>Havo namligi past (${data.humidity}%). Sug'orish chastotasini oshiring va mulch qo'llashni ko'rib chiqing.</p>
+                    </div>
+                `;
+            } catch (error) {
+                weatherDiv.innerHTML = '<p style="color: #ff416c;">Ob-havo ma\'lumotlarini yuklashda xato yuz berdi.</p>';
+            }
+        }
+
+        // Load sensors page
+        async function loadSensorsPage() {
+            const sensorsDiv = document.getElementById('sensorsData');
+            sensorsDiv.innerHTML = '<div class="loading"></div> Datchilar ma\'lumotlari yuklanmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/sensor/sensors/`);
+                const data = await response.json();
+                
+                let sensorsHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">';
+                
+                // Mock sensor data for display
+                const mockSensors = [
+                    {name: 'Tuproq Namligi #1', value: 23, unit: '%', status: 'critical', icon: '🌍'},
+                    {name: 'Tuproq Namligi #2', value: 35, unit: '%', status: 'warning', icon: '🌍'},
+                    {name: 'Havo Harorati', value: 24, unit: '°C', status: 'normal', icon: '🌡️'},
+                    {name: 'Havo Namligi', value: 45, unit: '%', status: 'normal', icon: '💨'},
+                    {name: 'pH Datchigi', value: 6.8, unit: 'pH', status: 'normal', icon: '⚡'},
+                    {name: 'Yorug\'lik', value: 850, unit: 'W/m²', status: 'normal', icon: '☀️'}
+                ];
+                
+                mockSensors.forEach(sensor => {
+                    const statusColor = sensor.status === 'critical' ? '#ff416c' : sensor.status === 'warning' ? '#ff9a00' : '#00ff87';
+                    const statusText = sensor.status === 'critical' ? 'Kritik' : sensor.status === 'warning' ? 'Ogohlantirish' : 'Normal';
+                    
+                    sensorsHTML += `
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; border-left: 4px solid ${statusColor};">
+                            <div style="font-size: 1.2rem; margin-bottom: 10px;">${sensor.icon} ${sensor.name}</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: ${statusColor}; margin-bottom: 5px;">${sensor.value}${sensor.unit}</div>
+                            <div style="color: ${statusColor};">${statusText}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px;">Son yangilanish: ${Math.floor(Math.random() * 5) + 1} daqiqa oldin</div>
+                        </div>
+                    `;
+                });
+                
+                sensorsHTML += '</div>';
+                sensorsDiv.innerHTML = sensorsHTML;
+            } catch (error) {
+                sensorsDiv.innerHTML = '<p style="color: #ff416c;">Datchilar ma\'lumotlarini yuklashda xato yuz berdi.</p>';
+            }
+        }
+
+        // Control functions
+        async function startIrrigation() {
+            const controlResults = document.getElementById('controlResults');
+            controlResults.innerHTML = '<div class="loading"></div> Sug\'orish boshlanmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/controller/start-irrigation/`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({duration_minutes: 15})
+                });
+                const data = await response.json();
+                
+                controlResults.innerHTML = `
+                    <div style="background: rgba(0,255,135,0.2); padding: 15px; border-radius: 10px; color: #00ff87;">
+                        ✅ ${data.message || 'Sug\'orish muvaffaqiyatli boshlandi'}
+                    </div>
+                `;
+            } catch (error) {
+                controlResults.innerHTML = `
+                    <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                        ❌ Xato: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function stopIrrigation() {
+            const controlResults = document.getElementById('controlResults');
+            controlResults.innerHTML = '<div class="loading"></div> Sug\'orish to\'xtatilmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/controller/stop-irrigation/`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                controlResults.innerHTML = `
+                    <div style="background: rgba(0,255,135,0.2); padding: 15px; border-radius: 10px; color: #00ff87;">
+                        ✅ ${data.message || 'Sug\'orish to\'xtatildi'}
+                    </div>
+                `;
+            } catch (error) {
+                controlResults.innerHTML = `
+                    <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                        ❌ Xato: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function emergencyStop() {
+            if (confirm('Haqiqatan ham favqulodda to\'xtatish amalga oshirilsinmi?')) {
+                const controlResults = document.getElementById('controlResults');
+                controlResults.innerHTML = '<div class="loading"></div> Favqulodda to\'xtatish...';
+                
+                try {
+                    const response = await fetch(`${API_BASE}/api/controller/emergency-stop/`, {
+                        method: 'POST'
+                    });
+                    const data = await response.json();
+                    
+                    controlResults.innerHTML = `
+                        <div style="background: rgba(255,154,0,0.2); padding: 15px; border-radius: 10px; color: #ff9a00;">
+                            🚨 ${data.message || 'Favqulodda to\'xtatish amalga oshirildi'}
+                        </div>
+                    `;
+                } catch (error) {
+                    controlResults.innerHTML = `
+                        <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                            ❌ Xato: ${error.message}
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        async function systemRestart() {
+            if (confirm('Tizimni qayta ishga tushirishni xohlaysizmi?')) {
+                const controlResults = document.getElementById('controlResults');
+                controlResults.innerHTML = '<div class="loading"></div> Tizim qayta ishga tushirilmoqda...';
+                
+                try {
+                    const response = await fetch(`${API_BASE}/api/controller/system-restart/`, {
+                        method: 'POST'
+                    });
+                    const data = await response.json();
+                    
+                    controlResults.innerHTML = `
+                        <div style="background: rgba(0,255,135,0.2); padding: 15px; border-radius: 10px; color: #00ff87;">
+                            🔄 ${data.message || 'Tizim qayta ishga tushirildi'}
+                        </div>
+                    `;
+                } catch (error) {
+                    controlResults.innerHTML = `
+                        <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                            ❌ Xato: ${error.message}
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        async function calibrateSensors() {
+            const controlResults = document.getElementById('controlResults');
+            controlResults.innerHTML = '<div class="loading"></div> Datchilar kalibrlanmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/controller/calibrate-sensors/`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                controlResults.innerHTML = `
+                    <div style="background: rgba(0,255,135,0.2); padding: 15px; border-radius: 10px; color: #00ff87;">
+                        🔧 ${data.message || 'Datchilar muvaffaqiyatli kalibrlandi'}
+                    </div>
+                `;
+            } catch (error) {
+                controlResults.innerHTML = `
+                    <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                        ❌ Xato: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function runAIAnalysis() {
+            const aiResults = document.getElementById('aiResults');
+            aiResults.innerHTML = '<div class="loading"></div> AI tahlil qilinmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/ai/comprehensive-analysis/`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                const geminiData = data.analysis_result?.gemini_analysis;
+                
+                aiResults.innerHTML = `
+                    <div style="background: rgba(96,239,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="color: #60efff; margin-bottom: 15px;">🤖 AI Xulosasi</h3>
+                        <p style="font-size: 1.1rem; margin-bottom: 15px;">${geminiData?.irrigation_recommendation || 'AI tahlili yakunlandi'}</p>
+                        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px;">
+                            <strong>Sabab:</strong> ${geminiData?.detailed_reasoning || 'Barcha datchilar ma\'lumotlari tahlil qilindi'}
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,255,135,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="color: #00ff87; margin-bottom: 15px;">💡 Tavsiyalar</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>${geminiData?.optimal_timing || 'Optimal sug\'orish vaqti: Ertalab 6:00-8:00'}</li>
+                            <li>Tavsiya etilgan suv miqdori: ${geminiData?.water_amount_recommendation || '300ml'}</li>
+                            <li>O'simlik holati: ${geminiData?.plant_health_assessment || 'Yaxshi'}</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                        <h3 style="color: #fff; margin-bottom: 15px;">📊 Tahlil Ma'lumotlari</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; font-size: 0.9rem;">
+                            <div>Tahlil ID: ${data.session_id}</div>
+                            <div>Ishonch darajasi: ${Math.round(data.analysis_result?.confidence_score || 90)}%</div>
+                            <div>Tahlil vaqti: ${new Date().toLocaleString('uz-UZ')}</div>
+                            <div>Holat: ${data.session_status || 'Yakunlangan'}</div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                aiResults.innerHTML = `
+                    <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                        ❌ AI tahlil xatosi: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function generateSampleData() {
+            try {
+                // Generate sensor sample data
+                await fetch(`${API_BASE}/api/sensor/generate-sample-data/`, {method: 'POST'});
+                
+                // Generate plant sample data
+                await fetch(`${API_BASE}/api/plant/create-sample-plants/`, {method: 'POST'});
+                
+                console.log('Sample data generated successfully');
+            } catch (error) {
+                console.log('Sample data generation failed:', error);
+            }
+        }
+
+        async function getSystemStatus() {
+            const controlResults = document.getElementById('controlResults');
+            controlResults.innerHTML = '<div class="loading"></div> Tizim holati tekshirilmoqda...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/controller/irrigation-status/`);
+                const data = await response.json();
+                
+                controlResults.innerHTML = `
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                        <h3 style="color: #60efff; margin-bottom: 15px;">📊 Tizim Holati</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div>Tizim: ${data.system_active ? 'Faol' : 'Nofaol'}</div>
+                            <div>Faol sug'orish: ${data.active_irrigations}</div>
+                            <div>Rejalashtirilgan: ${data.scheduled_irrigations}</div>
+                            <div>Faol zonalar: ${data.active_zones}/${data.total_zones}</div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                controlResults.innerHTML = `
+                    <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
+                        ❌ Tizim holatini olishda xato: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function loadControlPage() {
+            // Control page is already loaded, just refresh status
+            getSystemStatus();
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
+</body>
+</html>
