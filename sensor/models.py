@@ -55,30 +55,185 @@ class SensorReading(models.Model):
     
     @classmethod
     def generate_random_reading(cls, sensor):
-        """Generate random sensor data for testing"""
+        """Generate realistic random sensor data for testing"""
+        import datetime
+        current_hour = timezone.now().hour
+        current_season = cls._get_current_season()
+        
+        # Vaqt va faslga bog'liq o'zgarishlar
         value_ranges = {
-            'soil_moisture': (15, 80),
-            'soil_temperature': (10, 35),
-            'air_temperature': (15, 40),
-            'air_humidity': (30, 90),
-            'rainfall': (0, 50),
-            'ph': (5.5, 8.0),
-            'conductivity': (0.5, 3.0),
-            'light_intensity': (100, 1000),
+            'soil_moisture': cls._get_soil_moisture_range(current_season, sensor.is_critical),
+            'soil_temperature': cls._get_soil_temperature_range(current_season, current_hour),
+            'air_temperature': cls._get_air_temperature_range(current_season, current_hour),
+            'air_humidity': cls._get_air_humidity_range(current_season, current_hour),
+            'rainfall': cls._get_rainfall_range(current_season),
+            'ph': cls._get_ph_range(sensor.location),
+            'conductivity': cls._get_conductivity_range(current_season),
+            'light_intensity': cls._get_light_intensity_range(current_hour, current_season),
         }
         
         sensor_type_key = sensor.sensor_type.name.lower().replace(' ', '_')
         if sensor_type_key in value_ranges:
             min_val, max_val = value_ranges[sensor_type_key]
-            if sensor_type_key == 'soil_moisture' and sensor.is_critical:
-                # Generate critical values for soil moisture
-                value = random.uniform(15, 30)
-            else:
-                value = round(random.uniform(min_val, max_val), 2)
+            
+            # Normal taqsimot bilan qiymat yaratish
+            avg_val = (min_val + max_val) / 2
+            std_dev = (max_val - min_val) / 6  # 99.7% qiymatlar chegarada bo'lsin
+            value = random.normalvariate(avg_val, std_dev)
+            value = max(min_val, min(max_val, value))  # Chegaralarda ushlab turish
+            value = round(value, 2)
         else:
             value = round(random.uniform(0, 100), 2)
+        
+        # Anomaliya ehtimoli (1% hodisa)
+        is_anomaly = random.random() < 0.01
+        if is_anomaly and sensor_type_key == 'soil_moisture':
+            value = random.uniform(5, 15)  # Juda quruq holat
             
-        return cls.objects.create(sensor=sensor, value=value)
+        return cls.objects.create(sensor=sensor, value=value, is_anomaly=is_anomaly)
+    
+    @staticmethod
+    def _get_current_season():
+        """Joriy faslni aniqlash"""
+        month = timezone.now().month
+        if month in [12, 1, 2]:
+            return 'winter'
+        elif month in [3, 4, 5]:
+            return 'spring'
+        elif month in [6, 7, 8]:
+            return 'summer'
+        else:
+            return 'autumn'
+    
+    @staticmethod
+    def _get_soil_moisture_range(season, is_critical):
+        """Tuproq namligi diapazonini aniqlash"""
+        if is_critical:
+            # Kritik datchik - qurg'oq sharoitlarda
+            base_ranges = {
+                'winter': (20, 35),
+                'spring': (25, 40),
+                'summer': (15, 30),  # Yozda eng quruq
+                'autumn': (30, 45)
+            }
+        else:
+            # Normal datchiklar
+            base_ranges = {
+                'winter': (45, 70),
+                'spring': (50, 75),
+                'summer': (35, 60),  # Yozda pastroq
+                'autumn': (55, 80)
+            }
+        return base_ranges[season]
+    
+    @staticmethod
+    def _get_soil_temperature_range(season, hour):
+        """Tuproq harorati diapazonini aniqlash"""
+        base_ranges = {
+            'winter': (5, 15),
+            'spring': (12, 22),
+            'summer': (20, 35),
+            'autumn': (15, 25)
+        }
+        min_temp, max_temp = base_ranges[season]
+        
+        # Kun davomidagi o'zgarishlar (tuproq sekin isiydi/soviydi)
+        if 6 <= hour <= 18:  # Kunduzi
+            return (min_temp + 2, max_temp + 3)
+        else:  # Tunda
+            return (min_temp, max_temp - 2)
+    
+    @staticmethod
+    def _get_air_temperature_range(season, hour):
+        """Havo harorati diapazonini aniqlash"""
+        base_ranges = {
+            'winter': (0, 15),
+            'spring': (15, 25),
+            'summer': (25, 40),
+            'autumn': (10, 20)
+        }
+        min_temp, max_temp = base_ranges[season]
+        
+        # Kun davomidagi o'zgarishlar
+        if 10 <= hour <= 16:  # Eng issiq vaqt
+            return (min_temp + 5, max_temp + 5)
+        elif 6 <= hour <= 9 or 17 <= hour <= 20:  # O'rtacha vaqt
+            return (min_temp + 2, max_temp + 2)
+        else:  # Tunda
+            return (min_temp, max_temp - 3)
+    
+    @staticmethod
+    def _get_air_humidity_range(season, hour):
+        """Havo namligi diapazonini aniqlash"""
+        base_ranges = {
+            'winter': (60, 85),
+            'spring': (50, 75),
+            'summer': (35, 65),
+            'autumn': (55, 80)
+        }
+        min_hum, max_hum = base_ranges[season]
+        
+        # Ertalab namlik yuqori, kunduzi past
+        if 5 <= hour <= 8:  # Ertalab
+            return (min_hum + 10, max_hum + 5)
+        elif 12 <= hour <= 17:  # Kunduzi
+            return (min_hum - 10, max_hum - 15)
+        else:  # Kechqurun va tunda
+            return (min_hum, max_hum)
+    
+    @staticmethod
+    def _get_rainfall_range(season):
+        """Yomg'ir miqdori diapazonini aniqlash"""
+        # Ko'p vaqt yomg'ir bo'lmaydi (70% holatlarda 0)
+        if random.random() < 0.7:
+            return (0, 0)
+            
+        base_ranges = {
+            'winter': (0, 5),
+            'spring': (2, 15),
+            'summer': (5, 25),  # Yozgi yomg'irlar kuchliroq
+            'autumn': (3, 12)
+        }
+        return base_ranges[season]
+    
+    @staticmethod
+    def _get_ph_range(location):
+        """pH diapazonini joylashuvga qarab aniqlash"""
+        if 'A sektori' in location:
+            return (6.2, 7.0)  # Biroz kislotali
+        elif 'B sektori' in location:
+            return (6.8, 7.5)  # Neutral-ishqoriy
+        else:
+            return (6.5, 7.2)  # Ideal diapazon
+    
+    @staticmethod
+    def _get_conductivity_range(season):
+        """O'tkazuvchanlik diapazonini aniqlash"""
+        base_ranges = {
+            'winter': (0.8, 1.8),
+            'spring': (1.0, 2.2),
+            'summer': (1.5, 2.8),  # Yozda tuz konsentratsiyasi yuqori
+            'autumn': (1.2, 2.0)
+        }
+        return base_ranges[season]
+    
+    @staticmethod
+    def _get_light_intensity_range(hour, season):
+        """Yorug'lik intensivligi diapazonini aniqlash"""
+        if hour < 6 or hour > 20:  # Tunda
+            return (0, 50)
+        elif 6 <= hour <= 8 or 18 <= hour <= 20:  # Tong/kech
+            return (100, 400)
+        elif 9 <= hour <= 17:  # Kunduzi
+            base_ranges = {
+                'winter': (300, 700),
+                'spring': (600, 900),
+                'summer': (800, 1200),
+                'autumn': (400, 800)
+            }
+            return base_ranges[season]
+        else:
+            return (200, 600)
 
 
 class WeatherData(models.Model):

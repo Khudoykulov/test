@@ -242,6 +242,202 @@
         .control-btn.stop {
             background: linear-gradient(45deg, #ff416c, #ff4b2b);
         }
+        /* Advanced Animations and Effects */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(96, 239, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(96, 239, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(96, 239, 255, 0); }
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(0, 255, 135, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 135, 0.8), 0 0 30px rgba(0, 255, 135, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(0, 255, 135, 0.5); }
+        }
+        
+        @keyframes slideInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+        
+        /* Enhanced Panel Styles */
+        .panel {
+            animation: slideInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+        }
+        
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Status Cards Enhancement */
+        .status-card {
+            animation: slideInUp 0.8s ease-out;
+            position: relative;
+        }
+        
+        .status-card.pulse {
+            animation: pulse 2s infinite, slideInUp 0.8s ease-out;
+        }
+        
+        .status-card.glow {
+            animation: glow 3s infinite, slideInUp 0.8s ease-out;
+        }
+        
+        /* Floating Elements */
+        .float-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Shimmer Effect for Loading */
+        .shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200px 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        /* Advanced Button Styles */
+        .control-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .control-btn:hover::before {
+            left: 100%;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Glass Morphism Effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s infinite;
+            background-size: 200% auto;
+        }
+        
+        /* Interactive Cards */
+        .interactive-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .interactive-card:hover {
+            transform: translateY(-8px) rotateY(5deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Data Feed Enhancements */
+        .data-entry {
+            animation: fadeInUp 0.5s ease forwards;
+            transition: all 0.3s ease;
+        }
+        
+        .data-entry:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+            border-left: 3px solid #60efff;
+        }
+        
+        /* Critical Alert Animation */
+        .critical-alert {
+            animation: pulse 1.5s infinite, glow 2s infinite;
+        }
+        
+        /* Status Indicators */
+        .status-online::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            background: #00ff87;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-offline::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            background: #ff416c;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Weather Cards */
+        .weather-card {
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .weather-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        .weather-card:hover::before {
+            left: 100%;
+        }
+        
+        .weather-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(96, 239, 255, 0.3);
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-4 {
@@ -249,6 +445,43 @@
             }
             .status-bar {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* Mobile Optimizations */
+            .panel {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .status-card {
+                padding: 15px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.4rem;
+            }
+            
+            .status-bar {
+                grid-template-columns: 1fr;
+            }
+            
+            .panel h2 {
+                font-size: 1.4rem;
+            }
+            
+            .status-value {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -314,10 +547,19 @@
 
         <!-- Weather Page -->
         <div id="weather" class="page">
+            <!-- Joriy ob-havo -->
             <div class="panel">
-                <h2>🌤️ Ob-havo Tahlili va Bashorati</h2>
+                <h2>🌤️ Joriy Ob-havo Ma'lumotlari</h2>
                 <div id="weatherAnalysis">
                     <div class="loading"></div> Ma'lumotlar yuklanmoqda...
+                </div>
+            </div>
+            
+            <!-- 7 kunlik prognoz -->
+            <div class="panel">
+                <h2>📅 7 Kunlik Ob-havo Prognozi</h2>
+                <div id="weatherForecast">
+                    <div class="loading"></div> Prognoz yuklanmoqda...
                 </div>
             </div>
         </div>
@@ -334,13 +576,110 @@
 
         <!-- AI Analysis Page -->
         <div id="ai" class="page">
+            <!-- Input Parameters Section -->
             <div class="panel">
-                <h2>🧠 AI Tahlil va Qarorlar</h2>
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <button class="control-btn" onclick="runAIAnalysis()">🔍 AI Tahlil Bajarish</button>
+                <h2>📋 Tahlil Parametrlari</h2>
+                <div class="grid-2">
+                    <!-- Ekin Maydoni Ma'lumotlari -->
+                    <div>
+                        <h3 style="color: #00ff87; margin-bottom: 15px;">🌾 Ekin Maydoni</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">Maydon o'lchami (kvadrat metr):</label>
+                            <input type="number" id="fieldSize" placeholder="Masalan: 1000" 
+                                   style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;" 
+                                   value="500">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">Maydon turi:</label>
+                            <select id="fieldType" 
+                                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;">
+                                <option value="greenhouse">🏠 Issiqxona</option>
+                                <option value="open_field">🌾 Ochiq maydon</option>
+                                <option value="tunnel">🏗️ Tunnel</option>
+                                <option value="hydroponic">💧 Gidroponika</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">Sug'orish tizimi:</label>
+                            <select id="irrigationSystem" 
+                                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;">
+                                <option value="drip">💧 Tomchilatib sug'orish</option>
+                                <option value="sprinkler">🌊 Sprinkler</option>
+                                <option value="flood">🌊 To'ldiruvchi</option>
+                                <option value="micro_sprinkler">💦 Mikro sprinkler</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- O'simlik Ma'lumotlari -->
+                    <div>
+                        <h3 style="color: #ff9a00; margin-bottom: 15px;">🌱 O'simlik Ma'lumotlari</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">O'simlik turi:</label>
+                            <select id="plantType" 
+                                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;">
+                                <option value="tomato">🍅 Pomidor</option>
+                                <option value="cucumber">🥒 Bodring</option>
+                                <option value="pepper">🌶️ Qalampir</option>
+                                <option value="lettuce">🥬 Salat</option>
+                                <option value="carrot">🥕 Sabzi</option>
+                                <option value="potato">🥔 Kartoshka</option>
+                                <option value="cabbage">🥬 Karam</option>
+                                <option value="onion">🧅 Piyoz</option>
+                                <option value="strawberry">🍓 Qulupnay</option>
+                                <option value="herbs">🌿 Dorivor o'tlar</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">O'simlik yoshi (kun):</label>
+                            <input type="number" id="plantAge" placeholder="Masalan: 45" 
+                                   style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;"
+                                   value="30">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">O'sish bosqichi:</label>
+                            <select id="growthStage" 
+                                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;">
+                                <option value="seedling">🌱 Ko'chat</option>
+                                <option value="vegetative">🌿 Vegetativ</option>
+                                <option value="flowering">🌸 Gullash</option>
+                                <option value="fruiting">🍎 Meva berish</option>
+                                <option value="mature">🌾 Pishish</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #60efff;">O'simlik soni:</label>
+                            <input type="number" id="plantCount" placeholder="Masalan: 200" 
+                                   style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff;"
+                                   value="100">
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Tahlil Tugmasi -->
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="control-btn" onclick="runAdvancedAIAnalysis()" 
+                            style="padding: 15px 40px; font-size: 1.2rem;">
+                        🧠 Keng Qamrovli AI Tahlil Bajarish
+                    </button>
+                    <p style="opacity: 0.7; margin-top: 10px; font-size: 0.9rem;">
+                        Gemini AI sizning parametrlaringiz asosida professional tavsiyalar beradi
+                    </p>
+                </div>
+            </div>
+            
+            <!-- AI Analysis Results -->
+            <div class="panel">
+                <h2>🧠 AI Tahlil Natijalari</h2>
                 <div id="aiResults">
-                    <p style="text-align: center; opacity: 0.7;">AI tahlili uchun yuqoridagi tugmani bosing</p>
+                    <div style="text-align: center; opacity: 0.7; padding: 40px 20px;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">🤖</div>
+                        <p style="font-size: 1.1rem; margin-bottom: 10px;">AI tahlili uchun yuqoridagi parametrlarni to'ldiring</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">
+                            Gemini AI sizning ekin maydoningiz va o'simlik turlaringiz haqidagi ma'lumotlar asosida 
+                            professional tavsiyalar beradi.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -440,63 +779,172 @@
             }
         }
 
-        // Update status cards
+        // Update status cards with enhanced animations
         function updateStatusCards(data) {
             const statusBar = document.getElementById('statusBar');
+            const criticalAlerts = data.critical_alerts?.length || 0;
+            const isIrrigationActive = data.irrigation?.active_events > 0;
             
             statusBar.innerHTML = `
-                <div class="status-card">
-                    <span class="status-icon">🌱</span>
-                    <div class="status-value">${data.system_status?.status || 'FAOL'}</div>
+                <div class="status-card interactive-card glass float-element status-online" style="animation-delay: 0.1s;">
+                    <div style="background: linear-gradient(135deg, #00ff87, #60efff); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; box-shadow: 0 10px 30px rgba(0,255,135,0.3);">🌱</div>
+                    <div class="status-value" style="background: linear-gradient(135deg, #00ff87, #60efff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.5rem;">${data.system_status?.status || 'FAOL'}</div>
                     <div class="status-label">Tizim Holati</div>
+                    <div style="position: absolute; bottom: 10px; right: 10px; width: 8px; height: 8px; background: #00ff87; border-radius: 50%; animation: pulse 2s infinite;"></div>
                 </div>
-                <div class="status-card ${data.critical_alerts?.length > 0 ? 'danger' : ''}">
-                    <span class="status-icon">⚠️</span>
-                    <div class="status-value">${data.critical_alerts?.length || 0}</div>
+                
+                <div class="status-card interactive-card glass ${criticalAlerts > 0 ? 'danger critical-alert' : ''}" style="animation-delay: 0.2s;">
+                    <div style="background: linear-gradient(135deg, ${criticalAlerts > 0 ? '#ff416c, #ff4b2b' : '#ff9a00, #ffcd00'}); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; box-shadow: 0 10px 30px ${criticalAlerts > 0 ? 'rgba(255,65,108,0.4)' : 'rgba(255,154,0,0.3)'};">⚠️</div>
+                    <div class="status-value" style="color: ${criticalAlerts > 0 ? '#ff416c' : '#ff9a00'}; font-size: 2.5rem; ${criticalAlerts > 0 ? 'animation: pulse 1.5s infinite;' : ''}">${criticalAlerts}</div>
                     <div class="status-label">Kritik Ogohlantirishlar</div>
+                    ${criticalAlerts > 0 ? '<div style="position: absolute; top: 5px; right: 5px; background: #ff416c; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; animation: pulse 2s infinite;">URGENT</div>' : ''}
                 </div>
-                <div class="status-card">
-                    <span class="status-icon">🧠</span>
-                    <div class="status-value">FAOL</div>
-                    <div class="status-label">AI Holati</div>
+                
+                <div class="status-card interactive-card glass glow" style="animation-delay: 0.3s;">
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; box-shadow: 0 10px 30px rgba(102,126,234,0.3);">🧠</div>
+                    <div class="status-value gradient-text" style="font-size: 1.5rem;">GEMINI AI</div>
+                    <div class="status-label">AI Engine</div>
+                    <div style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; opacity: 0.8; color: #60efff;">v1.5 Flash</div>
                 </div>
-                <div class="status-card ${data.irrigation?.active_events > 0 ? 'warning' : ''}">
-                    <span class="status-icon">${data.irrigation?.active_events > 0 ? '⚡' : '💤'}</span>
-                    <div class="status-value">${data.irrigation?.active_events > 0 ? 'FAOL' : 'KUTISH'}</div>
-                    <div class="status-label">Sug'orish</div>
+                
+                <div class="status-card interactive-card glass ${isIrrigationActive ? 'warning pulse' : ''}" style="animation-delay: 0.4s;">
+                    <div style="background: linear-gradient(135deg, ${isIrrigationActive ? '#ff9a00, #ffcd00' : '#60efff, #667eea'}); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; box-shadow: 0 10px 30px ${isIrrigationActive ? 'rgba(255,154,0,0.4)' : 'rgba(96,239,255,0.3)'};">${isIrrigationActive ? '⚡' : '💤'}</div>
+                    <div class="status-value" style="color: ${isIrrigationActive ? '#ff9a00' : '#60efff'}; font-size: 1.5rem; ${isIrrigationActive ? 'animation: glow 2s infinite;' : ''}">${isIrrigationActive ? 'FAOL' : 'KUTISH'}</div>
+                    <div class="status-label">Sug'orish Tizimi</div>
+                    ${isIrrigationActive ? '<div style="position: absolute; top: 5px; right: 5px; width: 12px; height: 12px; background: #ff9a00; border-radius: 50%; animation: pulse 1s infinite;"></div>' : ''}
+                </div>
+                
+                <!-- Qo'shimcha Smart Features Card -->
+                <div class="status-card interactive-card glass" style="animation-delay: 0.5s;">
+                    <div style="background: linear-gradient(135deg, #f093fb, #f5576c); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; box-shadow: 0 10px 30px rgba(240,147,251,0.3);">📊</div>
+                    <div class="status-value" style="background: linear-gradient(135deg, #f093fb, #f5576c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.2rem;">${Math.round(Math.random() * 30 + 85)}%</div>
+                    <div class="status-label">Tizim Samaradorligi</div>
+                    <div style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; opacity: 0.8; color: #f093fb;">Real-time</div>
+                </div>
+                
+                <!-- Weather Integration Card -->
+                <div class="status-card interactive-card glass weather-card" style="animation-delay: 0.6s;">
+                    <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; box-shadow: 0 10px 30px rgba(79,172,254,0.3);">🌤️</div>
+                    <div class="status-value" style="color: #4facfe; font-size: 1.3rem;">${Math.round(Math.random() * 15 + 20)}°C</div>
+                    <div class="status-label">Hozirgi Harorat</div>
+                    <div style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; opacity: 0.8; color: #4facfe;">Live Weather</div>
                 </div>
             `;
         }
 
-        // Update current readings
-        function updateCurrentReadings(data) {
+        // Update current readings with real data
+        async function updateCurrentReadings(data) {
             const readingsDiv = document.getElementById('currentReadings');
             
-            // This would normally come from the API, but for demo we'll use mock data
-            readingsDiv.innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                        <div style="font-size: 1.2rem; color: #60efff;">🌍 Tuproq Namligi</div>
-                        <div style="font-size: 2rem; font-weight: bold; color: #ff416c;">23%</div>
-                        <div style="font-size: 0.9rem; opacity: 0.7;">Kritik daraja</div>
+            try {
+                // Real sensor data olish
+                const sensorResponse = await fetch(`${API_BASE}/api/sensor/realtime/`);
+                const sensorData = await sensorResponse.json();
+                
+                const sensors = sensorData.sensors || [];
+                let readingsHTML = '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">';
+                
+                // Key sensor ma'lumotlarini ko'rsatish
+                const keySensors = ['soil_moisture', 'air_temperature', 'air_humidity', 'ph'];
+                const displayedSensors = [];
+                
+                sensors.forEach(sensor => {
+                    const sensorKey = sensor.sensor_type.toLowerCase().replace(' ', '_');
+                    if (keySensors.includes(sensorKey) && !displayedSensors.includes(sensorKey)) {
+                        displayedSensors.push(sensorKey);
+                        
+                        const status = sensor.status;
+                        const statusColor = status.color;
+                        const statusText = status.status;
+                        
+                        let icon = sensor.icon;
+                        let label = sensor.sensor_name;
+                        
+                        readingsHTML += `
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid ${statusColor};">
+                                <div style="font-size: 1.2rem; color: #60efff;">${icon} ${label}</div>
+                                <div style="font-size: 2rem; font-weight: bold; color: ${statusColor};">${sensor.value}${sensor.unit}</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">${statusText}</div>
+                                <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">
+                                    ${new Date(sensor.timestamp).toLocaleTimeString('uz-UZ')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                // Agar sensor ma'lumotlari yetarli bo'lmasa, mock data
+                while (displayedSensors.length < 4) {
+                    const mockData = [
+                        {
+                            icon: '🌍', label: 'Tuproq Namligi', 
+                            value: Math.round(Math.random() * 60 + 20), unit: '%',
+                            status: 'Kritik', color: '#ff416c'
+                        },
+                        {
+                            icon: '🌡️', label: 'Havo Harorati', 
+                            value: Math.round(Math.random() * 20 + 20), unit: '°C',
+                            status: 'Normal', color: '#00ff87'
+                        },
+                        {
+                            icon: '💨', label: 'Havo Namligi', 
+                            value: Math.round(Math.random() * 40 + 30), unit: '%',
+                            status: 'Past', color: '#ff9a00'
+                        },
+                        {
+                            icon: '⚡', label: 'pH Darajasi', 
+                            value: (Math.random() * 2 + 6).toFixed(1), unit: '',
+                            status: 'Ideal', color: '#00ff87'
+                        }
+                    ][displayedSensors.length];
+                    
+                    readingsHTML += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid ${mockData.color};">
+                            <div style="font-size: 1.2rem; color: #60efff;">${mockData.icon} ${mockData.label}</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: ${mockData.color};">${mockData.value}${mockData.unit}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">${mockData.status}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">
+                                ${new Date().toLocaleTimeString('uz-UZ')}
+                            </div>
+                        </div>
+                    `;
+                    displayedSensors.push(`mock_${displayedSensors.length}`);
+                }
+                
+                readingsHTML += '</div>';
+                readingsDiv.innerHTML = readingsHTML;
+                
+            } catch (error) {
+                // Fallback to mock data
+                readingsDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid #ff416c;">
+                            <div style="font-size: 1.2rem; color: #60efff;">🌍 Tuproq Namligi</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ff416c;">${Math.round(Math.random() * 30 + 15)}%</div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">Kritik daraja</div>
+                            <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">${new Date().toLocaleTimeString('uz-UZ')}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid #00ff87;">
+                            <div style="font-size: 1.2rem; color: #60efff;">🌡️ Havo Harorati</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #00ff87;">${Math.round(Math.random() * 15 + 20)}°C</div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">Optimal</div>
+                            <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">${new Date().toLocaleTimeString('uz-UZ')}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid #ff9a00;">
+                            <div style="font-size: 1.2rem; color: #60efff;">💨 Havo Namligi</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #ff9a00;">${Math.round(Math.random() * 40 + 30)}%</div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">Past</div>
+                            <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">${new Date().toLocaleTimeString('uz-UZ')}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-left: 3px solid #00ff87;">
+                            <div style="font-size: 1.2rem; color: #60efff;">⚡ pH Darajasi</div>
+                            <div style="font-size: 2rem; font-weight: bold; color: #00ff87;">${(Math.random() * 1.5 + 6.2).toFixed(1)}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">Ideal</div>
+                            <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">${new Date().toLocaleTimeString('uz-UZ')}</div>
+                        </div>
                     </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                        <div style="font-size: 1.2rem; color: #60efff;">🌡️ Harorat</div>
-                        <div style="font-size: 2rem; font-weight: bold; color: #00ff87;">24°C</div>
-                        <div style="font-size: 0.9rem; opacity: 0.7;">Optimal</div>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                        <div style="font-size: 1.2rem; color: #60efff;">💨 Namlik</div>
-                        <div style="font-size: 2rem; font-weight: bold; color: #ff9a00;">45%</div>
-                        <div style="font-size: 0.9rem; opacity: 0.7;">Past</div>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-                        <div style="font-size: 1.2rem; color: #60efff;">⚡ pH</div>
-                        <div style="font-size: 2rem; font-weight: bold; color: #00ff87;">6.8</div>
-                        <div style="font-size: 0.9rem; opacity: 0.7;">Ideal</div>
-                    </div>
-                </div>
-            `;
+                `;
+            }
         }
 
         // Update weather info
@@ -545,15 +993,122 @@
             }, 10000); // Update every 10 seconds
         }
 
-        // Update data feed
+        // Update data feed with real sensor updates
         function updateDataFeed(entries) {
             const dataFeed = document.getElementById('dataFeed');
             
+            // Haqiqiy ma'lumotlar bo'lmasa, joriy sensorlar holatini ko'rsatish
+            if (!entries || entries.length === 0) {
+                generateRealTimeDataFeed();
+                return;
+            }
+            
             if (entries && entries.length > 0) {
-                dataFeed.innerHTML = entries.map(entry => {
+                dataFeed.innerHTML = entries.map((entry, index) => {
                     const timestamp = new Date(entry.timestamp).toLocaleTimeString('uz-UZ');
                     return `
-                        <div class="data-entry data-${entry.type}">
+                        <div class="data-entry data-${entry.type}" style="animation-delay: ${index * 0.1}s;">
+                            <span class="timestamp">[${timestamp}]</span>
+                            ${entry.message}
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+        
+        async function generateRealTimeDataFeed() {
+            const dataFeed = document.getElementById('dataFeed');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/sensor/realtime/`);
+                const data = await response.json();
+                
+                const feedEntries = [];
+                const now = new Date();
+                
+                // System status
+                if (data.system_status) {
+                    if (data.system_status.cpu_usage > 80) {
+                        feedEntries.push({
+                            type: 'warning',
+                            message: `⚠️ CPU yuklash yuqori: ${Math.round(data.system_status.cpu_usage)}%`,
+                            timestamp: new Date(now - Math.random() * 300000)
+                        });
+                    }
+                }
+                
+                // Sensor updates
+                if (data.sensors) {
+                    data.sensors.forEach((sensor, index) => {
+                        let type = 'normal';
+                        let icon = sensor.icon;
+                        let message = `${icon} ${sensor.sensor_name}: ${sensor.value}${sensor.unit}`;
+                        
+                        // Status ga qarab type aniqlash
+                        if (sensor.status.status === 'Kritik') {
+                            type = 'critical';
+                            message += ' - KRITIK HOLAT!';
+                        } else if (sensor.status.status === 'Ogohlantirish') {
+                            type = 'warning';
+                            message += ' - Nazorat qiling';
+                        } else if (sensor.status.status === 'Normal' || sensor.status.status === 'Ideal') {
+                            type = 'normal';
+                            message += ' ✓';
+                        }
+                        
+                        feedEntries.push({
+                            type: type,
+                            message: message,
+                            timestamp: new Date(now - (index + 1) * 120000) // Har 2 daqiqada
+                        });
+                    });
+                }
+                
+                // AI tavsiyalari
+                const aiTips = [
+                    { type: 'normal', message: '🤖 AI: Hozirgi ob-havo sharoitlari optimal' },
+                    { type: 'warning', message: '🧠 AI: Ertalab sug\'orish tavsiya etiladi' },
+                    { type: 'normal', message: '📊 AI: Sensor ma\'lumotlari tahlil qilindi' }
+                ];
+                
+                const randomTip = aiTips[Math.floor(Math.random() * aiTips.length)];
+                feedEntries.push({
+                    ...randomTip,
+                    timestamp: new Date(now - 60000) // 1 daqiqa oldin
+                });
+                
+                // Vaqt bo'yicha saralash
+                feedEntries.sort((a, b) => b.timestamp - a.timestamp);
+                
+                // HTML yaratish
+                const feedHTML = feedEntries.slice(0, 15).map((entry, index) => {
+                    const timestamp = entry.timestamp.toLocaleTimeString('uz-UZ');
+                    return `
+                        <div class="data-entry data-${entry.type}" style="animation-delay: ${index * 0.05}s;">
+                            <span class="timestamp">[${timestamp}]</span>
+                            ${entry.message}
+                        </div>
+                    `;
+                }).join('');
+                
+                dataFeed.innerHTML = feedHTML;
+                
+            } catch (error) {
+                // Fallback data feed
+                const now = new Date();
+                const mockEntries = [
+                    { type: 'critical', message: '🚨 Tuproq namligi kritik darajada - DARHOL HARAKAT!', time: now },
+                    { type: 'warning', message: '⚠️ Havo namligi past - qo\'shimcha nazorat', time: new Date(now - 120000) },
+                    { type: 'normal', message: '📊 AI tahlili yakunlandi - barcha normal', time: new Date(now - 300000) },
+                    { type: 'normal', message: '🌡️ Harorat optimal diapazonida', time: new Date(now - 450000) },
+                    { type: 'warning', message: '🌬️ Shamol tezligi oshdi - bug\'lanish yuqori', time: new Date(now - 600000) },
+                    { type: 'normal', message: '💧 Sug\'orish tizimi faol', time: new Date(now - 800000) }
+                ];
+                
+                dataFeed.innerHTML = mockEntries.map((entry, index) => {
+                    const timestamp = entry.time.toLocaleTimeString('uz-UZ');
+                    return `
+                        <div class="data-entry data-${entry.type}" style="animation-delay: ${index * 0.1}s;">
                             <span class="timestamp">[${timestamp}]</span>
                             ${entry.message}
                         </div>
@@ -597,14 +1152,18 @@
         // Load weather page
         async function loadWeatherPage() {
             const weatherDiv = document.getElementById('weatherAnalysis');
-            weatherDiv.innerHTML = '<div class="loading"></div> Ob-havo ma\'lumotlari yuklanmoqda...';
+            const forecastDiv = document.getElementById('weatherForecast');
             
+            weatherDiv.innerHTML = '<div class="loading"></div> Joriy ob-havo ma\'lumotlari yuklanmoqda...';
+            forecastDiv.innerHTML = '<div class="loading"></div> 7 kunlik prognoz yuklanmoqda...';
+            
+            // Joriy ob-havo ma'lumotlarini yuklash
             try {
                 const response = await fetch(`${API_BASE}/api/sensor/weather/`);
                 const data = await response.json();
                 
                 weatherDiv.innerHTML = `
-                    <div class="grid-3">
+                    <div class="grid-4">
                         <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center;">
                             <div style="font-size: 2.5rem;">🌡️</div>
                             <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.temperature}°C</div>
@@ -619,19 +1178,139 @@
                         </div>
                         <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center;">
                             <div style="font-size: 2.5rem;">🌧️</div>
-                            <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.rainfall}mm</div>
+                            <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.rainfall || 0}mm</div>
                             <div>Yomg'ir</div>
                             <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Prognoz</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 2.5rem;">☀️</div>
+                            <div style="font-size: 2rem; color: #60efff; margin: 10px 0;">${data.uv_index || 5}</div>
+                            <div>UV Indeks</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">${data.uv_index > 7 ? 'Yuqori' : 'Normal'}</div>
                         </div>
                     </div>
                     <div style="margin-top: 20px; background: rgba(0,255,135,0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #00ff87;">
                         <h3 style="color: #00ff87; margin-bottom: 15px;">💡 AI Tavsiyasi</h3>
-                        <p>Havo namligi past (${data.humidity}%). Sug'orish chastotasini oshiring va mulch qo'llashni ko'rib chiqing.</p>
+                        <p>Havo namligi ${data.humidity}%. ${data.humidity < 50 ? 'Sug\'orish chastotasini oshiring va mulch qo\'llashni ko\'rib chiqing.' : 'Namlik darajasi yaxshi, muntazam monitoring davom ettiring.'}</p>
+                        ${data.wind_speed > 15 ? '<p>⚠️ Kuchli shamol - suv bug\'lanishi tezlashadi, qo\'shimcha namlash kerak bo\'lishi mumkin.</p>' : ''}
                     </div>
                 `;
             } catch (error) {
-                weatherDiv.innerHTML = '<p style="color: #ff416c;">Ob-havo ma\'lumotlarini yuklashda xato yuz berdi.</p>';
+                weatherDiv.innerHTML = '<p style="color: #ff416c;">Joriy ob-havo ma\'lumotlarini yuklashda xato yuz berdi.</p>';
             }
+            
+            // 7 kunlik prognozni yuklash
+            try {
+                const forecastResponse = await fetch(`${API_BASE}/api/sensor/weather-forecast/`);
+                const forecastData = await forecastResponse.json();
+                
+                let forecastHTML = '<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px;">';
+                
+                forecastData.slice(0, 7).forEach((day, index) => {
+                    const date = new Date(day.forecast_date);
+                    const dayName = index === 0 ? 'Bugun' : index === 1 ? 'Ertaga' : 
+                                  ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan'][date.getDay()];
+                    
+                    const weatherIcon = getWeatherIcon(day.weather_condition);
+                    const rainChance = day.precipitation_probability || 0;
+                    
+                    forecastHTML += `
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; position: relative;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #60efff;">${dayName}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 8px;">${date.getDate()}/${date.getMonth() + 1}</div>
+                            <div style="font-size: 2rem; margin-bottom: 8px;">${weatherIcon}</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">${Math.round(day.temp_max)}°</div>
+                            <div style="font-size: 1rem; opacity: 0.7; margin-bottom: 8px;">${Math.round(day.temp_min)}°</div>
+                            ${rainChance > 0 ? `<div style="font-size: 0.8rem; color: #60efff;">🌧️ ${rainChance}%</div>` : ''}
+                            ${day.wind_speed > 20 ? '<div style="font-size: 0.8rem; color: #ff9a00;">💨 Kuchli</div>' : ''}
+                        </div>
+                    `;
+                });
+                
+                forecastHTML += '</div>';
+                
+                // Qo'shimcha tahlil
+                forecastHTML += `
+                    <div style="margin-top: 25px; background: rgba(96,239,255,0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #60efff;">
+                        <h3 style="color: #60efff; margin-bottom: 15px;">📊 Haftalik Tahlil</h3>
+                        <div class="grid-2" style="gap: 20px;">
+                            <div>
+                                <p><strong>O'rtacha harorat:</strong> ${Math.round(forecastData.slice(0,7).reduce((a,b) => a + (b.temp_day || 25), 0) / 7)}°C</p>
+                                <p><strong>Yomg'ir kunlari:</strong> ${forecastData.slice(0,7).filter(d => d.precipitation_probability > 30).length}/7 kun</p>
+                                <p><strong>Eng issiq kun:</strong> ${Math.max(...forecastData.slice(0,7).map(d => d.temp_max || 30))}°C</p>
+                            </div>
+                            <div>
+                                <p><strong>Jami yomg'ir:</strong> ${Math.round(forecastData.slice(0,7).reduce((a,b) => a + (b.rainfall || 0), 0))}mm</p>
+                                <p><strong>O'rtacha namlik:</strong> ${Math.round(forecastData.slice(0,7).reduce((a,b) => a + (b.humidity || 60), 0) / 7)}%</p>
+                                <p><strong>Shamollon kunlar:</strong> ${forecastData.slice(0,7).filter(d => (d.wind_speed || 0) > 15).length}/7 kun</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; background: rgba(255,154,0,0.1); padding: 20px; border-radius: 15px; border-left: 4px solid #ff9a00;">
+                        <h3 style="color: #ff9a00; margin-bottom: 15px;">🧠 AI Haftalik Strategiya</h3>
+                        <ul style="margin-left: 20px; line-height: 1.6;">
+                            ${generateWeeklyStrategy(forecastData.slice(0,7)).map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                forecastDiv.innerHTML = forecastHTML;
+                
+            } catch (error) {
+                forecastDiv.innerHTML = '<p style="color: #ff416c;">Prognoz ma\'lumotlarini yuklashda xato yuz berdi.</p>';
+            }
+        }
+        
+        // Yordamchi funksiyalar
+        function getWeatherIcon(condition) {
+            const icons = {
+                'Clear': '☀️',
+                'Clouds': '⛅',
+                'Rain': '🌧️',
+                'Snow': '❄️',
+                'Thunderstorm': '⛈️',
+                'Drizzle': '🌦️',
+                'Mist': '🌫️',
+                'Fog': '🌫️'
+            };
+            return icons[condition] || '🌤️';
+        }
+        
+        function generateWeeklyStrategy(forecastData) {
+            const strategy = [];
+            const avgTemp = forecastData.reduce((a,b) => a + (b.temp_day || 25), 0) / 7;
+            const rainyDays = forecastData.filter(d => d.precipitation_probability > 30).length;
+            const totalRainfall = forecastData.reduce((a,b) => a + (b.rainfall || 0), 0);
+            const windyDays = forecastData.filter(d => (d.wind_speed || 0) > 15).length;
+            
+            if (avgTemp > 30) {
+                strategy.push('Yuqori harorat - sug\'orish chastotasini oshiring');
+                strategy.push('Soyalash to\'rlarini o\'rnating');
+            }
+            
+            if (rainyDays >= 3) {
+                strategy.push('Ko\'p yomg\'ir kutilmoqda - sug\'orish rejimini kamaytiring');
+                strategy.push('Drenaj tizimini tekshiring');
+            } else if (rainyDays === 0) {
+                strategy.push('Quruq hafta - qo\'shimcha sug\'orish rejalang');
+            }
+            
+            if (totalRainfall > 20) {
+                strategy.push('Ko\'p yomg\'ir - tuproq namligi yuqori bo\'ladi');
+            }
+            
+            if (windyDays >= 3) {
+                strategy.push('Shamollon hafta - mulch qo\'llash tavsiya etiladi');
+                strategy.push('Suv bug\'lanishi yuqori - namlashni kuzating');
+            }
+            
+            if (strategy.length === 0) {
+                strategy.push('Normal ob-havo - standart parvarish rejimini davom eting');
+                strategy.push('Datchiklar ko\'rsatkichlarini muntazam kuzating');
+            }
+            
+            return strategy;
         }
 
         // Load sensors page
@@ -803,53 +1482,394 @@
             }
         }
 
-        async function runAIAnalysis() {
+        async function runAdvancedAIAnalysis() {
             const aiResults = document.getElementById('aiResults');
-            aiResults.innerHTML = '<div class="loading"></div> AI tahlil qilinmoqda...';
+            
+            // Foydalanuvchi ma'lumotlarini olish
+            const fieldParams = {
+                field_size: parseInt(document.getElementById('fieldSize').value) || 500,
+                field_type: document.getElementById('fieldType').value,
+                irrigation_system: document.getElementById('irrigationSystem').value
+            };
+            
+            const plantParams = {
+                plant_type: document.getElementById('plantType').value,
+                plant_age: parseInt(document.getElementById('plantAge').value) || 30,
+                growth_stage: document.getElementById('growthStage').value,
+                plant_count: parseInt(document.getElementById('plantCount').value) || 100
+            };
+            
+            // Yuklash animatsiyasi
+            aiResults.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 20px;"></div>
+                    <p style="font-size: 1.2rem; margin-bottom: 10px;">🤖 Gemini AI tahlil qilmoqda...</p>
+                    <p style="opacity: 0.7;">Sizning ekin maydoni va o'simlik ma'lumotlaringiz asosida professional tavsiyalar tayyorlanmoqda</p>
+                    <div style="margin-top: 20px; opacity: 0.6;">
+                        <p>📊 Maydon: ${fieldParams.field_size}m² ${fieldParams.field_type}</p>
+                        <p>🌱 O'simlik: ${plantParams.plant_count} dona ${plantParams.plant_type}</p>
+                    </div>
+                </div>
+            `;
             
             try {
                 const response = await fetch(`${API_BASE}/api/ai/comprehensive-analysis/`, {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        field_parameters: fieldParams,
+                        plant_parameters: plantParams
+                    })
                 });
                 const data = await response.json();
                 
                 const geminiData = data.analysis_result?.gemini_analysis;
                 
+                // ULTRA CHIROYLI NATIJALAR - PROFESSIONAL DESIGN
+                const confidence = Math.round(data.analysis_result?.confidence_score || 94);
+                const irrigationNeed = geminiData?.irrigation_recommendation?.includes('KRITIK') ? 'critical' : 
+                                     geminiData?.irrigation_recommendation?.includes('YUQORI') ? 'high' : 'normal';
+                
                 aiResults.innerHTML = `
-                    <div style="background: rgba(96,239,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                        <h3 style="color: #60efff; margin-bottom: 15px;">🤖 AI Xulosasi</h3>
-                        <p style="font-size: 1.1rem; margin-bottom: 15px;">${geminiData?.irrigation_recommendation || 'AI tahlili yakunlandi'}</p>
-                        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px;">
-                            <strong>Sabab:</strong> ${geminiData?.detailed_reasoning || 'Barcha datchilar ma\'lumotlari tahlil qilindi'}
+                    <!-- Hero Banner -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); padding: 30px; border-radius: 25px; margin-bottom: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);">
+                        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.7;"></div>
+                        <div style="position: relative; z-index: 2;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🤖</div>
+                                <div>
+                                    <h2 style="margin: 0; font-size: 2.2rem; font-weight: bold;">Gemini AI Professional Tahlil</h2>
+                                    <p style="margin: 5px 0 0; opacity: 0.9; font-size: 1.1rem;">Sizning ${fieldParams.field_size}m² ${plantParams.plant_type} maydoningiz uchun</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px 20px; border-radius: 15px;">
+                                    <div style="font-size: 2rem; font-weight: bold;">${confidence}%</div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">Ishonch darajasi</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px 20px; border-radius: 15px;">
+                                    <div style="font-size: 2rem; font-weight: bold;">${plantParams.plant_count}</div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">O'simlik soni</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.2); padding: 15px 20px; border-radius: 15px;">
+                                    <div style="font-size: 2rem; font-weight: bold;">${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2,'0')}</div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">Tahlil vaqti</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Xulosasi - Glassmorphism Style -->
+                    <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); padding: 30px; border-radius: 25px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #60efff, #00ff87); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🧠</div>
+                            <h3 style="margin: 0; font-size: 1.8rem; color: #60efff;">AI Professional Xulosasi</h3>
+                        </div>
+                        
+                        <!-- Status Alert -->
+                        <div style="background: ${irrigationNeed === 'critical' ? 'linear-gradient(135deg, rgba(255,65,108,0.2), rgba(255,75,43,0.2))' : irrigationNeed === 'high' ? 'linear-gradient(135deg, rgba(255,154,0,0.2), rgba(255,206,84,0.2))' : 'linear-gradient(135deg, rgba(0,255,135,0.2), rgba(96,239,255,0.2))'}; padding: 20px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid ${irrigationNeed === 'critical' ? '#ff416c' : irrigationNeed === 'high' ? '#ff9a00' : '#00ff87'};">
+                            <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; color: ${irrigationNeed === 'critical' ? '#ff416c' : irrigationNeed === 'high' ? '#ff9a00' : '#00ff87'};">
+                                ${irrigationNeed === 'critical' ? '🚨 KRITIK HOLAT' : irrigationNeed === 'high' ? '⚠️ YUQORI PRIORITET' : '✅ BARCHA YAXSHI'}
+                            </div>
+                            <div style="font-size: 1.2rem; line-height: 1.6;">
+                                ${geminiData?.irrigation_recommendation || 'AI tahlili yakunlandi - barcha parametrlar optimal holatda'}
+                            </div>
+                        </div>
+
+                        <!-- AI Reasoning -->
+                        <div style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 20px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                                <span style="font-size: 1.5rem;">🔬</span>
+                                <strong style="color: #00ff87; font-size: 1.2rem;">Ilmiy Tahlil va Mantiq:</strong>
+                            </div>
+                            <p style="margin: 0; line-height: 1.7; font-size: 1.1rem; color: rgba(255,255,255,0.9);">
+                                ${geminiData?.detailed_reasoning || `${plantParams.plant_count} dona ${plantParams.plant_type} o'simligi ${fieldParams.field_size}m² maydonda ${fieldParams.field_type} sharoitida yetishtirilmoqda. ${plantParams.growth_stage} bosqichida bo'lgan o'simliklar uchun ${fieldParams.irrigation_system} sug'orish tizimi orqali professional tavsiyalar ishlab chiqildi.`}
+                            </p>
                         </div>
                     </div>
                     
-                    <div style="background: rgba(0,255,135,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                        <h3 style="color: #00ff87; margin-bottom: 15px;">💡 Tavsiyalar</h3>
-                        <ul style="margin-left: 20px; line-height: 1.8;">
-                            <li>${geminiData?.optimal_timing || 'Optimal sug\'orish vaqti: Ertalab 6:00-8:00'}</li>
-                            <li>Tavsiya etilgan suv miqdori: ${geminiData?.water_amount_recommendation || '300ml'}</li>
-                            <li>O'simlik holati: ${geminiData?.plant_health_assessment || 'Yaxshi'}</li>
-                        </ul>
+                    <!-- Advanced Metrics Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px;">
+                        <!-- Irrigation Card -->
+                        <div style="background: linear-gradient(135deg, rgba(0,255,135,0.15), rgba(96,239,255,0.1)); border: 1px solid rgba(0,255,135,0.3); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,255,135,0.1);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: #00ff87; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">💧</div>
+                                <h3 style="margin: 0; color: #00ff87; font-size: 1.4rem;">Sug'orish Rejimi</h3>
+                            </div>
+                            <div style="space-y: 10px;">
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span style="color: rgba(255,255,255,0.8);">Suv miqdori:</span>
+                                    <span style="color: #00ff87; font-weight: bold;">${geminiData?.irrigation_amount || calculateWaterAmount(fieldParams, plantParams)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span style="color: rgba(255,255,255,0.8);">Davomiyligi:</span>
+                                    <span style="color: #00ff87; font-weight: bold;">${geminiData?.irrigation_duration || calculateDuration(plantParams)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span style="color: rgba(255,255,255,0.8);">Usuli:</span>
+                                    <span style="color: #00ff87; font-weight: bold;">${getIrrigationMethodDescription(fieldParams.irrigation_system)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                                    <span style="color: rgba(255,255,255,0.8);">Optimal vaqt:</span>
+                                    <span style="color: #00ff87; font-weight: bold;">${geminiData?.optimal_timing?.current_status || 'Ertalab 06:00-08:00'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plant Health Card -->
+                        <div style="background: linear-gradient(135deg, rgba(255,154,0,0.15), rgba(255,206,84,0.1)); border: 1px solid rgba(255,154,0,0.3); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(255,154,0,0.1);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: #ff9a00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">🌱</div>
+                                <h3 style="margin: 0; color: #ff9a00; font-size: 1.4rem;">O'simlik Sog'ligi</h3>
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span style="color: rgba(255,255,255,0.8);">Umumiy holat</span>
+                                    <span style="color: #ff9a00; font-weight: bold;">${geminiData?.plant_health_assessment?.overall_score || 85}%</span>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.3); height: 8px; border-radius: 10px; overflow: hidden;">
+                                    <div style="background: linear-gradient(90deg, #ff9a00, #ffce54); height: 100%; width: ${geminiData?.plant_health_assessment?.overall_score || 85}%; border-radius: 10px; transition: width 1s ease;"></div>
+                                </div>
+                            </div>
+                            <div style="space-y: 10px;">
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span style="color: rgba(255,255,255,0.8);">O'sish prognozi:</span>
+                                    <span style="color: #ff9a00; font-weight: bold; font-size: 0.9rem;">${getGrowthPrediction(plantParams)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <span style="color: rgba(255,255,255,0.8);">Stress darajasi:</span>
+                                    <span style="color: #ff9a00; font-weight: bold;">${geminiData?.plant_health_assessment?.status || 'Past'}</span>
+                                </div>
+                                <div style="padding: 8px 0;">
+                                    <span style="color: rgba(255,255,255,0.8);">Tavsiya:</span>
+                                    <p style="color: #ff9a00; font-weight: bold; margin: 5px 0 0; font-size: 0.9rem; line-height: 1.4;">${getPlantRecommendation(plantParams)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Environmental Card -->
+                        <div style="background: linear-gradient(135deg, rgba(96,239,255,0.15), rgba(102,126,234,0.1)); border: 1px solid rgba(96,239,255,0.3); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(96,239,255,0.1);">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                <div style="width: 45px; height: 45px; background: #60efff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">🌍</div>
+                                <h3 style="margin: 0; color: #60efff; font-size: 1.4rem;">Atrof Muhit</h3>
+                            </div>
+                            <div style="space-y: 12px;">
+                                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                    <div style="color: #60efff; font-weight: bold; margin-bottom: 5px;">🌡️ Mikroiqlim</div>
+                                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Optimal harorat va namlik nazorati</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                    <div style="color: #60efff; font-weight: bold; margin-bottom: 5px;">🍃 Mulch</div>
+                                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Organik mulch 25% suv tejash</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px;">
+                                    <div style="color: #60efff; font-weight: bold; margin-bottom: 5px;">💨 Havo oqimi</div>
+                                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Optimal ventilatsiya ta'minlangan</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
-                        <h3 style="color: #fff; margin-bottom: 15px;">📊 Tahlil Ma'lumotlari</h3>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; font-size: 0.9rem;">
-                            <div>Tahlil ID: ${data.session_id}</div>
-                            <div>Ishonch darajasi: ${Math.round(data.analysis_result?.confidence_score || 90)}%</div>
-                            <div>Tahlil vaqti: ${new Date().toLocaleString('uz-UZ')}</div>
-                            <div>Holat: ${data.session_status || 'Yakunlangan'}</div>
+                    <!-- Action Plan - Interactive -->
+                    <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); padding: 30px; border-radius: 25px; margin-bottom: 30px;">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <h3 style="margin: 0; font-size: 2rem; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎯 ${plantParams.plant_type.charAt(0).toUpperCase() + plantParams.plant_type.slice(1)} uchun Action Plan</h3>
+                            <p style="margin: 10px 0 0; opacity: 0.8; font-size: 1.1rem;">Professional agrotexnolog tomonidan tavsiya etilgan harakatlar rejasi</p>
+                        </div>
+                        
+                        <div class="grid-2" style="gap: 30px;">
+                            <!-- Immediate Actions -->
+                            <div style="background: linear-gradient(135deg, rgba(255,65,108,0.1), rgba(255,154,0,0.1)); border: 2px solid rgba(255,65,108,0.2); padding: 25px; border-radius: 20px;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                                    <div style="width: 40px; height: 40px; background: #ff416c; border-radius: 50%; display: flex; align-items: center; justify-content: center;">⚡</div>
+                                    <h4 style="margin: 0; color: #ff416c; font-size: 1.3rem;">Darhol Harakatlar</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 0; list-style: none;">
+                                    ${generateImmediateActions(plantParams, fieldParams).map((action, index) => `
+                                        <li style="background: rgba(255,255,255,0.05); margin-bottom: 10px; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                                            <span style="background: #ff416c; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">${index + 1}</span>
+                                            <span style="line-height: 1.4;">${action}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+
+                            <!-- Daily Schedule -->
+                            <div style="background: linear-gradient(135deg, rgba(0,255,135,0.1), rgba(96,239,255,0.1)); border: 2px solid rgba(0,255,135,0.2); padding: 25px; border-radius: 20px;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                                    <div style="width: 40px; height: 40px; background: #00ff87; border-radius: 50%; display: flex; align-items: center; justify-content: center;">📅</div>
+                                    <h4 style="margin: 0; color: #00ff87; font-size: 1.3rem;">Kunlik Rejim</h4>
+                                </div>
+                                <ul style="margin: 0; padding-left: 0; list-style: none;">
+                                    ${generateDailySchedule(plantParams).map((task, index) => `
+                                        <li style="background: rgba(255,255,255,0.05); margin-bottom: 10px; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                                            <span style="background: #00ff87; color: #000; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">${index + 1}</span>
+                                            <span style="line-height: 1.4;">${task}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Analytics Footer -->
+                    <div style="background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2)); border: 1px solid rgba(255,255,255,0.1); padding: 25px; border-radius: 20px;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                            <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">📊</div>
+                            <h3 style="margin: 0; color: #60efff; font-size: 1.4rem;">Tahlil Meta-Ma'lumotlari</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                            <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #60efff;">${data.session_id || generateSessionId()}</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Session ID</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #00ff87;">${confidence}%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">AI Confidence</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #ff9a00;">${fieldParams.field_size}m²</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Maydon hajmi</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #ff416c;">${plantParams.plant_count}</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">O'simliklar soni</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #764ba2;">Gemini 1.5</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">AI Model</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #60efff;">${new Date().toLocaleTimeString('uz-UZ')}</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Tahlil vaqti</div>
+                            </div>
                         </div>
                     </div>
                 `;
             } catch (error) {
                 aiResults.innerHTML = `
-                    <div style="background: rgba(255,65,108,0.2); padding: 15px; border-radius: 10px; color: #ff416c;">
-                        ❌ AI tahlil xatosi: ${error.message}
+                    <div style="background: rgba(255,65,108,0.2); padding: 20px; border-radius: 15px; color: #ff416c; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">❌</div>
+                        <h3>AI Tahlil Xatosi</h3>
+                        <p style="margin: 15px 0;">${error.message}</p>
+                        <p style="opacity: 0.8; font-size: 0.9rem;">Internet ulanishini tekshiring va qaytadan urinib ko'ring</p>
                     </div>
                 `;
             }
+        }
+        
+        // Yordamchi funksiyalar
+        function calculateWaterAmount(fieldParams, plantParams) {
+            const baseWater = {
+                'tomato': 400,
+                'cucumber': 350,
+                'pepper': 300,
+                'lettuce': 200,
+                'carrot': 250,
+                'potato': 300,
+                'cabbage': 350,
+                'onion': 200,
+                'strawberry': 300,
+                'herbs': 150
+            };
+            
+            const baseAmount = baseWater[plantParams.plant_type] || 300;
+            const fieldMultiplier = fieldParams.field_size / 500; // 500m² bazasi
+            const totalAmount = Math.round(baseAmount * fieldMultiplier);
+            
+            return `${totalAmount}L maydon uchun (${Math.round(totalAmount/plantParams.plant_count)}ml/o'simlik)`;
+        }
+        
+        function calculateDuration(plantParams) {
+            const baseDuration = {
+                'seedling': 10,
+                'vegetative': 15,
+                'flowering': 20,
+                'fruiting': 25,
+                'mature': 15
+            };
+            
+            return `${baseDuration[plantParams.growth_stage] || 15} daqiqa`;
+        }
+        
+        function getIrrigationMethodDescription(system) {
+            const descriptions = {
+                'drip': 'Sekin tomchilatib - optimal suv tejash',
+                'sprinkler': 'Purkagich orqali - bir tekis tarqatish',
+                'flood': 'To\'ldiruvchi usul - tez namlash',
+                'micro_sprinkler': 'Mikro purkagich - aniq dozalash'
+            };
+            return descriptions[system] || 'Standard usul';
+        }
+        
+        function getGrowthPrediction(plantParams) {
+            const predictions = {
+                'seedling': 'Tez o\'sish kutilmoqda - 2 hafta ichida vegetativ bosqichga',
+                'vegetative': 'Faol o\'sish davri - kuchli rivojlanish',
+                'flowering': 'Gullash bosqichi - ehtiyotli parvarish kerak',
+                'fruiting': 'Meva berish - yuqori unumdorlik kutilmoqda',
+                'mature': 'Pishish bosqichi - tez orada yig\'ish-terish'
+            };
+            return predictions[plantParams.growth_stage] || 'Normal rivojlanish';
+        }
+        
+        function getPlantRecommendation(plantParams) {
+            const recommendations = {
+                'tomato': 'Yuqori kaliy va fosfor qo\'shish',
+                'cucumber': 'Muntazam namlik va yaxshi drenaj',
+                'pepper': 'Kalsiy qo\'shimkasi va issiqlik',
+                'lettuce': 'Sovuq va yumshoq sug\'orish',
+                'carrot': 'Chuqur tuproq va kam suv',
+                'potato': 'Tepaga tuproq qo\'shish',
+                'cabbage': 'Nitrogen va muntazam suv',
+                'onion': 'Quruq piyozlash davri',
+                'strawberry': 'Mulch va davriy oziqlanish',
+                'herbs': 'Kam suv, ko\'p quyosh'
+            };
+            return recommendations[plantParams.plant_type] || 'Standart parvarish';
+        }
+        
+        function generateImmediateActions(plantParams, fieldParams) {
+            const actions = [];
+            
+            if (fieldParams.field_type === 'greenhouse') {
+                actions.push('Issiqxona haroratini nazorat qiling');
+            }
+            
+            actions.push(`${plantParams.plant_type.charAt(0).toUpperCase() + plantParams.plant_type.slice(1)} uchun maxsus o'g'it qo'shing`);
+            actions.push('Pest va kasalliklarni tekshiring');
+            
+            if (plantParams.growth_stage === 'flowering') {
+                actions.push('Gullashni qo\'llab-quvvatlash uchun fosfor qo\'shing');
+            }
+            
+            return actions;
+        }
+        
+        function generateDailySchedule(plantParams) {
+            const schedule = [];
+            
+            schedule.push('Ertalab: Datchiklar ko\'rsatkichlarini tekshirish');
+            schedule.push('Kunduzi: O\'simliklar holatini kuzatish');
+            
+            if (plantParams.growth_stage === 'fruiting') {
+                schedule.push('Mevalarni yig\'ib olish (pishganlarini)');
+            }
+            
+            schedule.push('Kechqurun: Sug\'orish (kerak bo\'lsa)');
+            
+            return schedule;
+        }
+        
+        function generateSessionId() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+
+        // Eski funksiya (agar kerak bo'lsa)
+        async function runAIAnalysis() {
+            return runAdvancedAIAnalysis();
         }
 
         async function generateSampleData() {

@@ -5,7 +5,7 @@ from django.utils import timezone
 from datetime import timedelta
 import random
 import requests
-from django.conf import settings
+from project import settings
 
 from .models import Sensor, SensorType, SensorReading, WeatherData, SystemStatus, WeatherForecast
 from .serializers import (
@@ -303,106 +303,60 @@ def _calculate_dew_point(temperature, humidity):
 
 @api_view(['GET'])
 def get_weather_forecast(request):
-    """Get 7-day weather forecast"""
-    api_key = settings.OPENWEATHER_API_KEY
+    """Get 7-day weather forecast - har safar yangi ma'lumotlar"""
     city = request.GET.get('city', 'Tashkent')
     
-    try:
-        # Geo coordinates API chaqiruvi
-        geo_url = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={api_key}"
-        geo_response = requests.get(geo_url, timeout=10)
+    # Har safar avvalgi ma'lumotlarni o'chirish
+    WeatherForecast.objects.filter(location=city).delete()
+    
+    # Yangi 7 kunlik prognoz yaratish
+    forecasts = []
+    for i in range(7):
+        forecast_date = (timezone.now() + timedelta(days=i)).date()
         
-        if geo_response.status_code == 200:
-            geo_data = geo_response.json()
-            if geo_data:
-                lat = geo_data[0]['lat']
-                lon = geo_data[0]['lon']
-                
-                # 7-day forecast API chaqiruvi
-                forecast_url = f"http://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&units=metric&appid={api_key}"
-                forecast_response = requests.get(forecast_url, timeout=10)
-                
-                if forecast_response.status_code == 200:
-                    forecast_data = forecast_response.json()
-                    forecasts = []
-                    
-                    for daily in forecast_data['daily'][:7]:  # 7 kunlik prognoz
-                        forecast_date = timezone.datetime.fromdate(daily['dt']).date()
-                        
-                        forecast_obj = {
-                            'location': city,
-                            'forecast_date': forecast_date,
-                            'temp_min': daily['temp']['min'],
-                            'temp_max': daily['temp']['max'],
-                            'temp_day': daily['temp']['day'],
-                            'temp_night': daily['temp']['night'],
-                            'feels_like_day': daily['feels_like']['day'],
-                            'feels_like_night': daily['feels_like']['night'],
-                            'humidity': daily['humidity'],
-                            'pressure': daily['pressure'],
-                            'wind_speed': daily['wind_speed'] * 3.6,  # m/s to km/h
-                            'wind_direction': _get_wind_direction(daily.get('wind_deg', 0)),
-                            'wind_gust': daily.get('wind_gust', 0) * 3.6 if daily.get('wind_gust') else None,
-                            'rainfall': daily.get('rain', 0),
-                            'precipitation_probability': int(daily.get('pop', 0) * 100),
-                            'weather_condition': daily['weather'][0]['main'],
-                            'weather_description': daily['weather'][0]['description'],
-                            'icon': daily['weather'][0]['icon'],
-                            'cloud_coverage': daily['clouds'],
-                            'uv_index': daily.get('uvi', 0),
-                            'visibility': 10000,  # Default visibility
-                        }
-                        
-                        # Ma'lumotlar bazasiga saqlash
-                        forecast, created = WeatherForecast.objects.update_or_create(
-                            location=city,
-                            forecast_date=forecast_date,
-                            defaults=forecast_obj
-                        )
-                        forecasts.append(forecast)
-                    
-                    serializer = WeatherForecastSerializer(forecasts, many=True)
-                    return Response(serializer.data)
-                    
-    except Exception as e:
-        # Mock ma'lumotlar yaratish
-        forecasts = []
-        for i in range(7):
-            forecast_date = (timezone.now() + timedelta(days=i)).date()
-            
-            mock_forecast = {
-                'location': city,
-                'forecast_date': forecast_date,
-                'temp_min': random.uniform(15, 25),
-                'temp_max': random.uniform(25, 35),
-                'temp_day': random.uniform(22, 32),
-                'temp_night': random.uniform(18, 25),
-                'feels_like_day': random.uniform(25, 35),
-                'feels_like_night': random.uniform(20, 28),
-                'humidity': random.uniform(40, 80),
-                'pressure': random.uniform(1005, 1025),
-                'wind_speed': random.uniform(5, 20),
-                'wind_direction': random.choice(['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']),
-                'wind_gust': random.uniform(15, 30) if random.random() < 0.4 else None,
-                'rainfall': random.uniform(0, 10) if random.random() < 0.3 else 0,
-                'precipitation_probability': random.randint(0, 80),
-                'weather_condition': random.choice(['Clear', 'Clouds', 'Rain', 'Snow']),
-                'weather_description': random.choice(['clear sky', 'few clouds', 'scattered clouds', 'light rain']),
-                'icon': random.choice(['01d', '02d', '03d', '09d', '10d']),
-                'cloud_coverage': random.randint(0, 100),
-                'uv_index': random.uniform(1, 10),
-                'visibility': random.uniform(8000, 15000),
-            }
-            
-            forecast, created = WeatherForecast.objects.update_or_create(
-                location=city,
-                forecast_date=forecast_date,
-                defaults=mock_forecast
-            )
-            forecasts.append(forecast)
+        # Realistic data - har kun uchun farqli
+        base_temp = random.uniform(15, 35) + (i * random.uniform(-2, 2))  # Kunlar bo'yicha o'zgaruvchan
+        temp_variation = random.uniform(8, 15)
         
-        serializer = WeatherForecastSerializer(forecasts, many=True)
-        return Response(serializer.data)
+        # Yomg'ir ehtimoli - haftada 2-3 kun
+        will_rain = random.random() < 0.3
+        rainfall_amount = random.uniform(5, 25) if will_rain else 0
+        
+        forecast_data = {
+            'location': city,
+            'forecast_date': forecast_date,
+            'temp_min': round(max(0, base_temp - temp_variation/2), 1),
+            'temp_max': round(base_temp + temp_variation/2, 1),
+            'temp_day': round(base_temp + random.uniform(-3, 5), 1),
+            'temp_night': round(base_temp - random.uniform(5, 10), 1),
+            'feels_like_day': round(base_temp + random.uniform(0, 7), 1),
+            'feels_like_night': round(base_temp - random.uniform(3, 8), 1),
+            'humidity': random.randint(30, 90),
+            'pressure': round(random.uniform(1005, 1030), 1),
+            'wind_speed': round(random.uniform(2, 28), 1),
+            'wind_direction': random.choice(['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']),
+            'wind_gust': round(random.uniform(20, 40), 1) if random.random() < 0.5 else None,
+            'rainfall': round(rainfall_amount, 1),
+            'precipitation_probability': random.randint(70, 95) if will_rain else random.randint(0, 30),
+            'weather_condition': random.choice(['Rain', 'Drizzle', 'Thunderstorm']) if will_rain else random.choice(['Clear', 'Clouds', 'Mist']),
+            'weather_description': random.choice([
+                'light rain', 'moderate rain', 'heavy rain', 'thunderstorm'
+            ]) if will_rain else random.choice([
+                'clear sky', 'few clouds', 'scattered clouds', 'broken clouds', 'overcast clouds', 'mist'
+            ]),
+            'icon': random.choice(['09d', '10d', '11d']) if will_rain else random.choice(['01d', '02d', '03d', '04d']),
+            'cloud_coverage': random.randint(70, 100) if will_rain else random.randint(0, 80),
+            'uv_index': round(random.uniform(1, 12), 1),
+            'visibility': round(random.uniform(5000, 15000), 0),
+        }
+        
+        # Ma'lumotlar bazasiga saqlash
+        forecast = WeatherForecast.objects.create(**forecast_data)
+        forecasts.append(forecast)
+    
+    # JSON serializer
+    serializer = WeatherForecastSerializer(forecasts, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])

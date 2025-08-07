@@ -425,7 +425,8 @@ class GeminiIntegration:
             self.use_real_api = False
         
     def analyze_comprehensive_data(self, all_sensor_data: Dict, weather_data: Dict, 
-                                 plant_data: Dict, historical_trends: Dict) -> Dict:
+                                 plant_data: Dict, historical_trends: Dict,
+                                 field_params: Dict = None, plant_params: Dict = None) -> Dict:
         """
         Use Gemini AI for comprehensive data analysis
         
@@ -440,7 +441,8 @@ class GeminiIntegration:
         """
         try:
             analysis_prompt = self._build_analysis_prompt(
-                all_sensor_data, weather_data, plant_data, historical_trends
+                all_sensor_data, weather_data, plant_data, historical_trends,
+                field_params, plant_params
             )
             
             if self.use_real_api:
@@ -471,86 +473,139 @@ class GeminiIntegration:
             }
     
     def _build_analysis_prompt(self, sensor_data: Dict, weather_data: Dict,
-                              plant_data: Dict, historical_trends: Dict) -> str:
-        """Build analysis prompt for Gemini"""
+                              plant_data: Dict, historical_trends: Dict, 
+                              field_params: Dict = None, plant_params: Dict = None) -> str:
+        """Build enhanced analysis prompt for Gemini with field and plant specifics"""
+        
+        # Ekin maydoni va o'simlik ma'lumotlarini qo'shish
+        field_info = ""
+        plant_info = ""
+        
+        if field_params:
+            field_info = f"""
+        EKIN MAYDONI MA'LUMOTLARI:
+        - Maydon o'lchami: {field_params.get('field_size', 'N/A')} kvadrat metr
+        - Maydon turi: {field_params.get('field_type', 'N/A')} 
+        - Sug'orish tizimi: {field_params.get('irrigation_system', 'N/A')}
+        - Maydon zichligi: {field_params.get('field_size', 0) / plant_params.get('plant_count', 1) if plant_params else 'N/A'} m²/o'simlik
+            """
+        
+        if plant_params:
+            plant_type_info = {
+                'tomato': 'Pomidor - issiqliksevar, yuqori suv talab qiladigan',
+                'cucumber': 'Bodring - tez o\'suvchi, ko\'p suv kerak',
+                'pepper': 'Qalampir - issiq iqlimni yaxshi ko\'radi',
+                'lettuce': 'Salat - sovuqbardosh, kam suv kerak',
+                'carrot': 'Sabzi - chuqur tuproqni yaxshi ko\'radi',
+                'potato': 'Kartoshka - o\'rtacha suv talab qiladi',
+                'cabbage': 'Karam - sovuqbardosh, ko\'p suv kerak',
+                'onion': 'Piyoz - quruqchilikka chidamli',
+                'strawberry': 'Qulupnay - yumshoq sug\'orish kerak',
+                'herbs': 'Dorivor o\'tlar - kam suv, ko\'p quyosh'
+            }
+            
+            growth_stage_info = {
+                'seedling': 'Ko\'chat bosqichi - juda ehtiyotli sug\'orish',
+                'vegetative': 'Vegetativ o\'sish - faol sug\'orish kerak',
+                'flowering': 'Gullash bosqichi - muntazam lekin ehtiyotli',
+                'fruiting': 'Meva berish - ko\'p suv va oziqlanish',
+                'mature': 'Pishish bosqichi - sug\'orishni kamaytiriladi'
+            }
+            
+            plant_info = f"""
+        O'SIMLIK MAXSUS MA'LUMOTLARI:
+        - O'simlik turi: {plant_params.get('plant_type', 'N/A')} - {plant_type_info.get(plant_params.get('plant_type', ''), 'Noma\'lum tur')}
+        - O'simlik yoshi: {plant_params.get('plant_age', 'N/A')} kun
+        - O'sish bosqichi: {plant_params.get('growth_stage', 'N/A')} - {growth_stage_info.get(plant_params.get('growth_stage', ''), '')}
+        - O'simliklar soni: {plant_params.get('plant_count', 'N/A')} dona
+        - Har bir o'simlik uchun maydon: {field_params.get('field_size', 0) / plant_params.get('plant_count', 1):.2f} m² (agar {plant_params.get('plant_count', 0)} > 0 bo'lsa)
+            """
         
         prompt = f"""
-        Smart irrigation system uchun quyidagi keng qamrovli ma'lumotlarni tahlil qilib, professional tavsiyalar bering:
+        Siz professional agrotexnolog va smart irrigation system mutaxassisisiz. Quyidagi keng qamrovli ma'lumotlarni chuqur tahlil qilib, ilmiy asoslangan va amaliy tavsiyalar bering:
 
         DATCHIKLAR MA'LUMOTLARI:
-        - Tuproq namligi: {sensor_data.get('soil_moisture', 'N/A')}%
-        - Tuproq harorati: {sensor_data.get('soil_temperature', 'N/A')}°C
+        - Tuproq namligi: {sensor_data.get('soil_moisture', 'N/A')}% (Optimal: 60-80%)
+        - Tuproq harorati: {sensor_data.get('soil_temperature', 'N/A')}°C (Optimal: 18-24°C)
         - Havo harorati: {sensor_data.get('air_temperature', 'N/A')}°C
-        - Havo namligi: {sensor_data.get('air_humidity', 'N/A')}%
-        - pH darajasi: {sensor_data.get('ph', 'N/A')}
-        - O'tkazuvchanlik: {sensor_data.get('conductivity', 'N/A')} mS/cm
+        - Havo namligi: {sensor_data.get('air_humidity', 'N/A')}% (Optimal: 50-70%)
+        - pH darajasi: {sensor_data.get('ph', 'N/A')} (Optimal: 6.0-7.0)
+        - Elektro'tkazuvchanlik: {sensor_data.get('conductivity', 'N/A')} mS/cm
         - Yorug'lik intensivligi: {sensor_data.get('light_intensity', 'N/A')} W/m²
-        - Yomg'ir o'lchagichi: {sensor_data.get('rainfall', 'N/A')}mm
 
-        OB-HAVO MA'LUMOTLARI (KENGAYTIRILGAN):
+        OB-HAVO MA'LUMOTLARI (REAL-TIME):
         - Joriy harorat: {weather_data.get('temperature', 'N/A')}°C
         - His qilinadigan harorat: {weather_data.get('feels_like_temperature', 'N/A')}°C
         - Havo namligi: {weather_data.get('humidity', 'N/A')}%
         - Atmosfera bosimi: {weather_data.get('pressure', 'N/A')} hPa
-        - Shamol tezligi: {weather_data.get('wind_speed', 'N/A')} km/h
-        - Shamol yo'nalishi: {weather_data.get('wind_direction', 'N/A')}
-        - Shamol zarbasi: {weather_data.get('wind_gust', 'N/A')} km/h
-        - Yomg'ir prognozi: {weather_data.get('rainfall', 'N/A')}mm
-        - Bulut qoplami: {weather_data.get('cloud_coverage', 'N/A')}%
-        - UV indeksi: {weather_data.get('uv_index', 'N/A')}
-        - Havo sifati indeksi: {weather_data.get('air_quality_index', 'N/A')} (1-5)
-        - Ko'rinish masofasi: {weather_data.get('visibility', 'N/A')}m
-        - Shudring nuqtasi: {weather_data.get('dew_point', 'N/A')}°C
-        - Quyosh radiatsiyasi: {weather_data.get('solar_radiation', 'N/A')} W/m²
+        - Shamol tezligi: {weather_data.get('wind_speed', 'N/A')} km/h (Bug'lanishga ta'sir)
+        - UV indeksi: {weather_data.get('uv_index', 'N/A')} (O'simlik stressiga ta'sir)
+        - Yomg'ir ehtimoli: {weather_data.get('rainfall', 'N/A')}mm (Keyingi 24 soat)
+        - Havo sifati: {weather_data.get('air_quality_index', 'N/A')}/5 (1-a'lo, 5-yomon)
 
-        O'SIMLIKLAR MA'LUMOTLARI:
-        - Jami o'simliklar: {plant_data.get('total_plants', 'N/A')} dona
-        - Sog'lom o'simliklar: {plant_data.get('healthy_plants', 'N/A')} dona
-        - E'tibor talab qiladigan: {plant_data.get('plants_needing_attention', 'N/A')} dona
+        {field_info}
+
+        {plant_info}
 
         TARIXIY TRENDLAR:
-        - Sug'orish chastotasi: {historical_trends.get('irrigation_frequency', 'N/A')}
-        - Suv iste'moli trendi: {historical_trends.get('water_usage_trend', 'N/A')}
-        - O'simlik o'sish sur'ati: {historical_trends.get('plant_growth_rate', 'N/A')}
+        - Sug'orish chastotasi: {historical_trends.get('irrigation_frequency', 'Haftada 3-4 marta')}
+        - Suv iste'moli trendi: {historical_trends.get('water_usage_trend', 'Barqaror')}
+        - O'simlik o'sish sur'ati: {historical_trends.get('plant_growth_rate', 'Normal')}
 
-        Professional agrotexnolog sifatida quyidagi bo'yicha batafsil tahlil va tavsiyalar bering:
+        PROFESSIONAL TAHLIL VA TAVSIYALAR:
 
-        1. SUG'ORISH ZARURIYATI VA REJIM:
-           - Darhol sug'orish kerakmi? (Ha/Yo'q va batafsil sababi)
-           - Sug'orish miqdori (har bir o'simlik uchun ml)
-           - Sug'orish davomiyligi (daqiqalar)
-           - Sug'orish usuli (tomchilatib/sekin/tez)
+        1. 🚨 SUG'ORISH ZARURIYATI (CRITICAL ANALYSIS):
+           - Darhol sug'orish kerakmi? (Ha/Yo'q + aniq sababi)
+           - Necha litr suv kerak? (Har bir o'simlik uchun ml hisobida)
+           - Qancha vaqt davomida? (Daqiqalar)
+           - Qaysi usul bilan? (Tomchilatib/sprinkler/flood)
+           - Kritiklik darajasi: 1-10 (10 = o'simlik nobud bo'lish xavfi)
 
-        2. OPTIMAL VAQT BELGILASH:
-           - Eng yaxshi sug'orish vaqti va sababi
-           - Qachon sug'orishdan qochish kerak
-           - Keyingi sug'orish vaqti prognozi
+        2. ⏰ OPTIMAL TIMING STRATEGIYASI:
+           - Bugun eng yaxshi sug'orish vaqti (soati ko'rsating)
+           - Nega aynan bu vaqt optimal? (ilmiy asoslash)
+           - Qachon qat'iyan sug'orish mumkin emas?
+           - Keyingi 3 kun uchun sug'orish jadvali
 
-        3. O'SIMLIK SOG'LIGI BAHOLASH:
-           - Umumiy sog'lik holati (1-100% ball)
-           - Stress belgilari va darajasi
-           - O'sish holati baholash
-           - Rivojlanish prognozi
+        3. 🌱 O'SIMLIK SOGI'LIGA CHUQUR BAHO:
+           - Umumiy holat: ___% (aniq son)
+           - Stress darajasi: Past/O'rtacha/Yuqori/Kritik
+           - O'sish tezligi: Normal/Sekin/Tez
+           - Kasallik/zararkunanda riski: ___% 
+           - 2 hafta ichida kutilayotgan o'zgarishlar
 
-        4. XAVF OMILLARI TAHLILI:
-           - Joriy xavf omillari
-           - Potensial muammolar (keyingi 24-48 soat)
-           - Oldini olish choralari
-           - Critical alert belgilar
+        4. ⚠️ XAVF OMILLARI VA URGENT ACTIONS:
+           - Joriy xavflar (prioritet bo'yicha)
+           - 24-48 soat ichida mumkin bo'lgan muammolar
+           - Darhol ko'riladigan choralar (step-by-step)
+           - Oldini olish strategiyasi
 
-        5. ATROF-MUHIT OPTIMIZATSIYASI:
-           - Mikroiqlim yaxshilash
-           - Havo aylanishi masalalari  
-           - Yorug'lik va soyalash tavsiylari
-           - Mulching va tuproq yaxshilash
+        5. 🔬 ATROF-MUHIT OPTIMIZATSIYASI:
+           - Mikroiqlim yaxshilash yo'llari
+           - Mulching strategiyasi (qaysi material?)
+           - Soyalash/yorug'lik sozlash
+           - Tuproq sifatini yaxshilash (aniq takliflar)
 
-        6. RESURS TEJASH VA SAMARADORLIK:
-           - Suv tejash imkoniyatlari
-           - Energiya tejash yo'llari
-           - Optimal datchik joylashuvi
-           - Texnologiya yaxshilash takliflari
+        6. 💰 RESURS SAMARADORLIGI:
+           - Suv tejash: ___% tejash mumkin (aniq usullar)
+           - Energiya tejash strategiyasi
+           - Optimal sensor joylashuvi
+           - ROI yaxshilash takliflari
 
-        Barcha tavsilalarni ilmiy asoslar va amaliy tajriba bilan oqlang. Aniq raqamlar va vaqt ko'rsatkichlarini berimg.
+        7. 📊 ANIQ RAQAMLAR VA METRICS:
+           - Kunlik suv iste'moli: ___ L
+           - Haftalik sug'orish soni: ___ marta
+           - Kutilayotgan hosil: ___% o'sish
+           - Xarajat tejash: ___ som/oy
+
+        MUHIM: 
+        - Barcha javoblarni ANIQ RAQAMLAR bilan bering
+        - Har bir tavsiyaga ILMIY ASOS ko'rsating
+        - PRAKTIK va amalga oshirilishi MUMKIN bo'lgan takliflar bering
+        - {plant_params.get('plant_type', 'o\'simlik') if plant_params else 'o\'simlik'} ning biologik ehtiyojlarini hisobga oling
+        - Ob-havo o'zgarishlariga moslashish strategiyasini ham qo'shing
+
+        Javobingizni professional, aniq va amaliy yo'nalishdagi format bilan bering.
         """
         
         return prompt

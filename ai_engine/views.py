@@ -209,9 +209,14 @@ def comprehensive_analysis(request):
             'plant_growth_rate': 'Normal'
         }
         
+        # Foydalanuvchi parametrlarini olish
+        field_params = request.data.get('field_parameters', {})
+        plant_params = request.data.get('plant_parameters', {})
+        
         # Run Gemini analysis
         gemini_result = gemini_integration.analyze_comprehensive_data(
-            sensors_data, weather_data, plant_data, historical_trends
+            sensors_data, weather_data, plant_data, historical_trends,
+            field_params, plant_params
         )
         
         # Update session with results
